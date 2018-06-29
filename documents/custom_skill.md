@@ -533,12 +533,16 @@ Content-Type: application/json;charset=UTF-8
 {
   "type": "Payment.Pay",
   "order": {
-      "partnerOrderId": "string",
-      "totalFee": 100,
       "title": "string",
       "description": "string",
-      "price": 10,
-      "count": 10
+      "userId": "string",
+      "items": [{
+          "itemId": "string",
+          "itemName": "string",
+          "price": 10,
+          "totalFee": 100,
+          "count": 10
+      }]
   }
 }
 ```
@@ -549,9 +553,12 @@ Content-Type: application/json;charset=UTF-8
 | -------------------------- | ---------------------------------------- | -------- | ---- |
 | `type`                     | 固定值：`Payment.Pay`                     | `string` | 是    |
 | `order`                    | 订单信息                                  | `object` | 是    |
-| `order.partnerOrderId`     | 商户内部的订单ID                          | `string` | 是    |
-| `order.totalFee`           | 总金额，单位为分                           | `int`    | 是    |
-| `order.name`               | 订单名称                                  | `string` | 是    |
-| `order.description`        | 订单描述                                  | `string` | 是    |
-| `order.price`              | 商品单价，单位为分                         | `int`    | 是    |
-| `order.count`              | 商品数量                                  | `int`    | 是    |
+| `order.userId`             | 用户在商户平台的用户ID，用于后续的信息回传   | `string` | 是    |
+| `order.title`               | 商品名称                                  | `string` | 是    |
+| `order.description`         | 商品描述                                  | `string` | 是    |
+| `order.items`              | 商品子类                                   | `array`  | 是    |
+| `order.items[].itemId`     | 商品子类ID                                 | `string`    | 是    |
+| `order.items[].itemName`   | 商品子类名称                               | `string`    | 是    |
+| `order.items[].totalFee`   | 总金额，单位为分                           | `int`    | 是    |
+| `order.items[].price`      | 商品单价，单位为分                         | `int`    | 是    |
+| `order.items[].count`      | 商品数量                                  | `int`    | 是    |
