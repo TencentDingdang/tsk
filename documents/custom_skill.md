@@ -237,7 +237,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | 参数              | 描述                                       | 类型      |
 | ---------------  | ------------------------------------------- | -------- |
 | `type`           | 固定为`PaymentMeta`                          | `string` |
-| `partnerOrderId` | 商户内部的订单ID                             | `string` |
+| `partnerOrderId` | 商户内部的订单ID（若商户提供）               | `string` |
 | `dingdangOrderId`| 叮当平台订单ID                               | `string` |
 
 ## 响应数据格式
@@ -533,7 +533,7 @@ Content-Type: application/json;charset=UTF-8
 {
   "type": "Payment.Pay",
   "order": {
-      "title": "string",
+      "name": "string",
       "description": "string",
       "userId": "string",
       "items": [{
@@ -554,7 +554,7 @@ Content-Type: application/json;charset=UTF-8
 | `type`                     | 固定值：`Payment.Pay`                     | `string` | 是    |
 | `order`                    | 订单信息                                  | `object` | 是    |
 | `order.userId`             | 用户在商户平台的用户ID，用于后续的信息回传   | `string` | 是    |
-| `order.title`               | 商品名称                                  | `string` | 是    |
+| `order.name`               | 商品名称                                  | `string` | 是    |
 | `order.description`         | 商品描述                                  | `string` | 是    |
 | `order.items`              | 商品子类                                   | `array`  | 是    |
 | `order.items[].itemId`     | 商品子类ID                                 | `string`    | 是    |
