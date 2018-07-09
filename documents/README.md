@@ -9,7 +9,7 @@
     + [技能创建](./custom_skill-how-to-create.md)
     + [技能协议](./custom_skill.md)
 6. 内容播报技能
-    + [技能创建](./flash_breifing-how-to-create.md)
+    + [技能创建](./flash_briefing-how-to-create.md)
     + [技能协议](./flash_briefing.md)
 7. [安全签名](./security.md)
 8. [支付能力](./pay.md)
