@@ -374,6 +374,43 @@ Content-Type: application/json;charset=UTF-8
 | `template.backgroundAudio` | 背景音频，见[Audio Object](#audio-object-参数说明) | `object` | 否    |
 | `template.url`             | 跳转链接                                     | `string` | 否    |
 
++ 卡片样例
+![](./pic/custom_skill_render_newsbodytemplate.png)
+
+##### NewsBodyTemplate1 单图文模板
+
++ 消息样例
+
+```json
+{
+  "type": "Display.RenderTemplate",
+  "token": "string",
+  "template": {
+    "type": "NewsBodyTemplate1",
+    "textContent": TextContent,
+    "backgroundImage": Image,
+    "backgroundAudio": Audio,
+    "url": "string"
+  }
+}
+```
+
++ 参数说明
+
+| 参数                         | 描述                                       | 类型       | 必需   |
+| -------------------------- | ---------------------------------------- | -------- | ---- |
+| `type`                     | 固定值：`Display.RenderTemplate`             | `string` | 是    |
+| `token`                    | 模板token，用于标识该内容                          | `string` | 是    |
+| `template`                 | 显示模板                                     | `object` | 是    |
+| `template.type`            | 固定值：`NewsBodyTemplate1`                   | `string` | 是    |
+| `template.textContent`     | 文本内容，见[TextContent Object](#textcontent-object-参数说明) | `object` | 是    |
+| `template.backgroundImage` | 背景图片，见[Image Object](#image-object-参数说明) | `object` | 否    |
+| `template.backgroundAudio` | 背景音频，见[Audio Object](#audio-object-参数说明) | `object` | 否    |
+| `template.url`             | 跳转链接                                     | `string` | 否    |
+
++ 卡片样例
+![](./pic/custom_skill_render_newsbodytemplate1.png)
+
 ##### TextBodyTemplate 单文本模板
 
 - 消息样例
@@ -398,6 +435,9 @@ Content-Type: application/json;charset=UTF-8
 | `template`             | 显示模板                                     | `object` | 是    |
 | `template.type`        | 固定值：`TextBodyTemplate`                   | `string` | 是    |
 | `template.textContent` | 文本内容，见[TextContent Object](#textcontent-object-参数说明) | `object` | 是    |
+
++ 卡片样例
+![](./pic/custom_skill_render_textbodytemplate.png)
 
 ##### HorizontialListTemplate 横向列表模板
 
@@ -432,6 +472,9 @@ Content-Type: application/json;charset=UTF-8
 | `template.listItems[].image`       | 图片，见[Image Object](#image-object-参数说明)   | `object` | 否    |
 | `template.listItems[].textContent` | 文本内容，见[TextContent Object](#textcontent-object-参数说明) | `object` | 是    |
 | `template.url`                     | 跳转链接                                     | `string` | 否    |
+
++ 卡片样例
+![](./pic/custom_skill_render_horizontiallisttemplate.png)
 
 ##### TextContent Object 参数说明
 
