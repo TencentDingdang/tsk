@@ -1,5 +1,7 @@
 # 腾讯叮当智能家居开放平台接入文档
 
+> 文档更新于2018/09/23，点击查看[更新日志](#更新日志)。
+
 腾讯叮当智能家居开放平台提供了一套与智能硬件厂商的云端进行数据交互的规范，能够让接入腾讯叮当智能家居开放平台的智能设备具备接受语音进行控制的能力。腾讯叮当智能家居技能是通过给智能硬件厂商的云端发送指令的方式，通过厂商的云端进行控制智能硬件的，因此，接入腾讯叮当智能家居开放平台的设备首先需要具备通过云端进行设备管理的能力。
 
 如果你的设备已经接入了Alexa Smart Home，腾讯叮当提供了一套兼容原有Alexa Smart Home技能的方案，用于快速将Alexa的技能接入到腾讯叮当智能家居中，具体请参照[Alexa Smart Home Skill兼容方案](./alexa-smart-home-compatible.md)。
@@ -81,6 +83,8 @@
 		- [UnsupportedOperationError](#unsupportedoperationerror)
 		- [UnsupportedTargetSettingError](#unsupportedtargetsettingerror)
 		- [UnexpectedInformationReceivedError](#unexpectedinformationreceivederror)
+- [更新日志](#更新日志)
+	- [2018/09/23 更新](#20180923-更新)
 
 <!-- /TOC -->
 
@@ -134,7 +138,8 @@
 | 命名空间                             | 功能说明                      | 指令名称列表                                   |
 | -------------------------------- | ------------------------- | ---------------------------------------- |
 | Dingdang.ConnectedHome.Discovery | 设备的发现和连接                  | • [DiscoverAppliancesRequest](#discoverappliancesrequest)<br />• [DiscoverAppliancesResponse](#discoverappliancesresponse) |
-| Dingdang.ConnectedHome.Control     | 已连接设备的控制，比如打开关闭、调高调低设备属性等 | • [TurnOnRequest](#turnonrequest)<br />• [TurnOnConfirmation](#turnonconfirmation)<br />• [TurnOffRequest](#turnoffrequest)<br />• [TurnOffConfirmation](#turnoffconfirmation)<br />• [SetColorRequest](#setcolorrequest)<br />• [SetColorConfirmation](#setcolorconfirmation)<br />• [IncrementBrightnessPercentageRequest](#incrementbrightnesspercentagerequest)<br />• [IncrementBrightnessPercentageConfirmation](#incrementbrightnesspercentageconfirmation)<br />• [DecrementBrightnessPercentageRequest](#decrementbrightnesspercentagerequest)<br />• [DecrementBrightnessPercentageConfirmation](#decrementbrightnesspercentageconfirmation)<br />• [SetBrightnessPercentageRequest](#setbrightnesspercentagerequest)<br />• [SetBrightnessPercentageConfirmation](#setbrightnesspercentageconfirmation) |
+| Dingdang.ConnectedHome.Control     | 已连接设备的控制，比如打开关闭、调高调低设备属性等 | • [TurnOnRequest](#turnonrequest)<br />• [TurnOnConfirmation](#turnonconfirmation)<br />• [TurnOffRequest](#turnoffrequest)<br />• [TurnOffConfirmation](#turnoffconfirmation)<br />• [SetColorRequest](#setcolorrequest)<br />• [SetColorConfirmation](#setcolorconfirmation)<br />• [IncrementBrightnessPercentageRequest](#incrementbrightnesspercentagerequest)<br />• [IncrementBrightnessPercentageConfirmation](#incrementbrightnesspercentageconfirmation)<br />• [DecrementBrightnessPercentageRequest](#decrementbrightnesspercentagerequest)<br />• [DecrementBrightnessPercentageConfirmation](#decrementbrightnesspercentageconfirmation)<br />• [SetBrightnessPercentageRequest](#setbrightnesspercentagerequest)<br />• [SetBrightnessPercentageConfirmation](#setbrightnesspercentageconfirmation)<br /> • [SetTemperatureRequest](#settemperaturerequest)<br /> • [SetTemperatureConfirmation](#settemperatureconfirmation)<br /> • [IncrementTemperatureRequest](#incrementtemperaturerequest)<br /> • [IncrementTemperatureConfirmation](#incrementtemperatureconfirmation)<br /> • [DecrementTemperatureRequest](#decrementtemperaturerequest)<br /> • [DecrementTemperatureConfirmation](#decrementtemperatureconfirmation)<br /> • [SetFanSpeedRequest](#setfanspeedrequest)<br /> • [SetFanSpeedConfirmation](#setfanspeedconfirmation)<br /> • [IncrementFanSpeedRequest](#incrementfanspeedrequest)<br /> • [IncrementFanSpeedConfirmation](#incrementfanspeedconfirmation)<br /> • [DecrementFanSpeedRequest](#decrementfanspeedrequest)<br /> • [DecrementFanSpeedConfirmation](#decrementfanspeedconfirmation)<br /> • [ChargeRequest](#chargerequest)<br /> • [ChargeConfirmation](#chargeconfirmation)<br /> • [SetModeRequest](#setmoderequest)<br /> • [SetModeConfirmation](#setmodeconfirmation) |
+| Dingdang.ConnectedHome.Query        | 查询设备的状态或传感器检测的数值 |  • [GetTemperatureReadingRequest](#gettemperaturereadingrequest)<br /> • [GetTemperatureReadingResponse](#gettemperaturereadingresponse)<br /> • [GetAirPM25Request](#getairpm25request)<br /> • [GetAirPM25Response](#getairpm25response)<br /> • [GetHumidityRequest](#gethumidityrequest)<br /> • [GetHumidityResponse](#gethumidityresponse) |
 
 ### 设备发现消息
 这类消息用于标识该技能可用的设备、场景，及其对应支持的功能。
@@ -2333,3 +2338,32 @@ Access Token由于非过期的原因失效
   }
 }
 ```
+
+## 更新日志
+### 2018/09/23 更新
+
++ 修改指令IncrementPercentageRequest、IncrementPercentageConfirmation、DecrementPercentageRequest、DecrementPercentageConfirmation、SetPercentageRequest、 SetPercentageConfirmation为意义更加明确的[IncrementBrightnessPercentageRequest](#incrementbrightnesspercentagerequest)、[IncrementBrightnessPercentageConfirmation](#incrementbrightnesspercentageconfirmation)、[DecrementBrightnessPercentageRequest](#decrementbrightnesspercentagerequest)、[DecrementBrightnessPercentageConfirmation](#decrementbrightnesspercentageconfirmation)、[SetBrightnessPercentageRequest](#setbrightnesspercentagerequest)、 [SetBrightnessPercentageConfirmation](#setbrightnesspercentageconfirmation)；
++ 新增控制类指令：
+    - [SetTemperatureRequest](#settemperaturerequest)
+    - [SetTemperatureConfirmation](#settemperatureconfirmation)
+    - [IncrementTemperatureRequest](#incrementtemperaturerequest)
+    - [IncrementTemperatureConfirmation](#incrementtemperatureconfirmation)
+    - [DecrementTemperatureRequest](#decrementtemperaturerequest)
+    - [DecrementTemperatureConfirmation](#decrementtemperatureconfirmation)
+    - [SetFanSpeedRequest](#setfanspeedrequest)
+    - [SetFanSpeedConfirmation](#setfanspeedconfirmation)
+    - [IncrementFanSpeedRequest](#incrementfanspeedrequest)
+    - [IncrementFanSpeedConfirmation](#incrementfanspeedconfirmation)
+    - [DecrementFanSpeedRequest](#decrementfanspeedrequest)
+    - [DecrementFanSpeedConfirmation](#decrementfanspeedconfirmation)
+    - [ChargeRequest](#chargerequest)
+    - [ChargeConfirmation](#chargeconfirmation)
+    - [SetModeRequest](#setmoderequest)
+    - [SetModeConfirmation](#setmodeconfirmation)
++ 新增查询类指令：
+    - [GetTemperatureReadingRequest](#gettemperaturereadingrequest)
+    - [GetTemperatureReadingResponse](#gettemperaturereadingresponse)
+    - [GetAirPM25Request](#getairpm25request)
+    - [GetAirPM25Response](#getairpm25response)
+    - [GetHumidityRequest](#gethumidityrequest)
+    - [GetHumidityResponse](#gethumidityresponse)
