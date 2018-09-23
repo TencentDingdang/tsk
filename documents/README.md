@@ -11,6 +11,9 @@
 6. 内容播报技能
     + [技能创建](./flash_briefing-how-to-create.md)
     + [技能协议](./flash_briefing.md)
+7. 智能家居技能
+    + [技能协议](./smart_home.md)
+    + [Alexa兼容方案](./alexa-smart-home-compatible.md)
 7. [安全签名](./security.md)
 8. [支付能力](./pay.md)
 9. [账号连接](./account_linking.md)
