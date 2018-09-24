@@ -1,5 +1,16 @@
 # 自定义技能
 
+自定义技能一般用于满足用户特定的需求，比如：天气技能用于满足用户天气查询的需求，当用户说“叮当叮当，深圳今天天气怎样”，天气技能根据解析出来的参数查询深圳当天的天气，并组织成文本回复语交给腾讯叮当利用语音合成技术（TTS，Text-To-Speech）播报给用户。交互流程大致如下图：
+![](./pic/custome-skill-interaction-flow.png)
+详细流程描述为：
+1. 用户对腾讯叮当终端说“叮当叮当，深圳今天天气怎样”；
+2. 腾讯叮当语音识别服务将用户音频转化为文本“深圳今天天气怎样”；
+3. 腾讯叮当语义理解服务判断“深圳今天天气怎样”为“天气”技能的“天气查询”意图，并解析出槽位`city=深圳; date=今天`;
+4. “天气”技能根据意图、槽位确定要执行查询深圳当天天气的任务，并将结果组织成自然语言返回给腾讯叮当；
+5. 腾讯叮当语音合成服务将技能给出的播报文本合成语音播报给用户：“深圳今天阴转小雨，出门记得带伞”。
+
+搭建自定义技能大体分两部分工作，一部分是意图设计，另一部分是服务开发，以下内容主要介绍技能服务需要支持的协议。
+
 <!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
 - [请求数据格式](#请求数据格式)
@@ -122,7 +133,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | 参数        | 描述                                       | 类型       |
 | --------- | ---------------------------------------- | -------- |
 | `version` | 协议的版本标识，当前版本为`1.0`                       | `string` |
-| `session` | 当前会话的相关信息，该数据只在请求类型为` LaunchRequest`、` IntentRequest`、`SessionEndedRequest`时才传到技能服务中，详细说明见[Session Object](#session-object-参数说明) | `object` |
+| `session` | 当前会话的相关信息，该数据只在请求类型为`LaunchRequest`、`IntentRequest`、`SessionEndedRequest`时才传到技能服务中，详细说明见[Session Object](#session-object-参数说明) | `object` |
 | `context` | 包含了当前腾讯叮当服务和设备的状态信息，该信息会包含在所有对技能的请求中。详细说明见[Context Object](#context-object-参数说明) | `object` |
 | `request` | 用户的详细请求内容，包含了几种不同类型的请求：<br>+ 标准请求<br>      - `LaunchRequest`：用户未明确意图的请求；<br>      - `IntentRequest`：用户指定意图的请求；<br>      - `SessionEndedRequest`：技能由于其他原因被动关闭时，这种类型的请求会被发送到你的服务上；<br><br>详细说明见[Request Object](#request-object-参数说明) | `object` |
 
