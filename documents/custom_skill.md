@@ -1,5 +1,16 @@
 # 自定义技能
 
+自定义技能一般用于满足用户特定的需求，比如：天气技能用于满足用户天气查询的需求，当用户说“叮当叮当，深圳今天天气怎样”，天气技能根据解析出来的参数查询深圳当天的天气，并组织成文本回复语交给腾讯叮当利用语音合成技术（TTS，Text-To-Speech）播报给用户。交互流程大致如下图：
+![](./pic/custome-skill-interaction-flow.png)
+详细流程描述为：
+1. 用户对腾讯叮当终端说“叮当叮当，深圳今天天气怎样”；
+2. 腾讯叮当语音识别服务将用户音频转化为文本“深圳今天天气怎样”；
+3. 腾讯叮当语义理解服务判断“深圳今天天气怎样”为“天气”技能的“天气查询”意图，并解析出槽位`city=深圳; date=今天`;
+4. “天气”技能根据意图、槽位确定要执行查询深圳当天天气的任务，并将结果组织成自然语言返回给腾讯叮当；
+5. 腾讯叮当语音合成服务将技能给出的播报文本合成语音播报给用户：“深圳今天阴转小雨，出门记得带伞”。
+
+搭建自定义技能大体分两部分工作，一部分是意图设计，另一部分是服务开发，以下内容主要介绍技能服务需要支持的协议。
+
 <!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
 - [请求数据格式](#请求数据格式)
@@ -86,7 +97,8 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
         "applicationId": "sssssskill.......id"
       },
       "user": {
-        "userId": "uuuuuuuu....id"
+        "userId": "uuuuuuuu....id",
+        "accessToken": "account....token"
       }
     }
   },
@@ -122,7 +134,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | 参数        | 描述                                       | 类型       |
 | --------- | ---------------------------------------- | -------- |
 | `version` | 协议的版本标识，当前版本为`1.0`                       | `string` |
-| `session` | 当前会话的相关信息，该数据只在请求类型为` LaunchRequest`、` IntentRequest`、`SessionEndedRequest`时才传到技能服务中，详细说明见[Session Object](#session-object-参数说明) | `object` |
+| `session` | 当前会话的相关信息，该数据只在请求类型为`LaunchRequest`、`IntentRequest`、`SessionEndedRequest`时才传到技能服务中，详细说明见[Session Object](#session-object-参数说明) | `object` |
 | `context` | 包含了当前腾讯叮当服务和设备的状态信息，该信息会包含在所有对技能的请求中。详细说明见[Context Object](#context-object-参数说明) | `object` |
 | `request` | 用户的详细请求内容，包含了几种不同类型的请求：<br>+ 标准请求<br>      - `LaunchRequest`：用户未明确意图的请求；<br>      - `IntentRequest`：用户指定意图的请求；<br>      - `SessionEndedRequest`：技能由于其他原因被动关闭时，这种类型的请求会被发送到你的服务上；<br><br>详细说明见[Request Object](#request-object-参数说明) | `object` |
 
@@ -146,13 +158,20 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | ------------- | ---------------------------------------- | -------- |
 | `application` | 当前技能的信息，用于验证该请求正确指向你的服务，其中：<br>+ ` applicationId`：技能ID，你可以在腾讯叮当技能平台上找到该ID | `object` |
 | `device`      | 当前与技能交互的设备信息：<br>+ `deviceId`：转换的设备ID，唯一标识一台设备；<br>+  `supportedInterfaces`：当前设备支持的接口类型，` AudioPlayer {}`表示该设备支持` AudioPlayer`接口 | `object` |
-| `user`        | 当前与技能交互的用户信息：<br>+ `userId`：转换的用户ID，唯一标识一个叮当用户，**用户重新关注技能后可能产生新的用户ID**； | `object` |
+| `user`        | 当前与技能交互的用户信息：<br>+ `userId`：转换的用户ID，唯一标识一个叮当用户，**用户重新关注技能后可能产生新的用户ID**；<br>+ `accessToken`：用户在第三方系统的账号标识，仅在账号连接成功后才会提供，查阅[账号连接](./account_linking.md)了解更多相关信息。 | `object` |
 
 ### Request Object 参数说明
 
 当用户以文字或语音的形式与你的技能进行交互时，腾讯叮当会给技能服务发送一个标准类型的请求（如：`LaunchRequest`、`IntentRequest`、`SessionEndedRequest`）。
 
 #### LaunchRequest 参数说明
+LaunchRequest在用户初次进入技能并且没有明确意图的时候发送给技能，比如：
+
+> **用户**：叮当叮当，打开QQ音乐
+>   *叮当发送`LaunchRequest`到技能*
+>   *技能可以给出欢迎语，并播放热门歌曲*
+> **叮当**：欢迎使用QQ音乐，最动听的音乐送给我最喜欢的你
+
 
 | 参数          | 描述                         | 类型       |
 | ----------- | -------------------------- | -------- |
@@ -162,6 +181,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `queryText` | 用户的Query                              | `string` |
 
 #### IntentRequest 参数说明
+当用户有明确的意图时，腾讯叮当将发送`IntentRequest`到技能，并指明当前意图和提取出的槽位。
 
 | 参数             | 描述                                       | 类型       |
 | -------------- | ---------------------------------------- | -------- |
@@ -186,6 +206,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `slots.slotName.values[].value.type` | 参数值类型，可选值有：<br>`text`：普通文本类型；<br>`unit`：度量单位类型；<br>`address`：地址类型；<br>`datetime`：时间类型； | `string` |
 
 #### Text Slot
+文本类型槽位，也是最常用的槽位类型，所有的自定义实体、大部分的系统实体都会返回该类型槽位。
 
 | 参数       | 描述         | 类型       |
 | -------- | ---------- | -------- |
@@ -194,6 +215,13 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `origin` | 用户原始说法     | `string` |
 
 #### Unit Slot
+用于表示带单位的实体，比如长度、货币等。使用该类型槽位的实体有：
++ sys.unit：所有单位
++ sys.unit.currency：货币
++ sys.unit.length：长度
++ sys.unit.duration：时间
++ sys.unit.age：年龄
+
 
 | 参数       | 描述         | 类型       |
 | -------- | ---------- | -------- |
@@ -203,6 +231,10 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `origin` | 用户原始说法     | `string` |
 
 #### Address Slot
+用于表示复杂地址类型的实体，比如“广东省深圳市南山区深南大道10000号腾讯大厦”，使用该槽位类型的实体有：
++ sys.geo.province
++ sys.geo.county
++ sys.geo.address
 
 | 参数         | 描述            | 类型       |
 | ---------- | ------------- | -------- |
@@ -217,6 +249,13 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `origin`   | 用户原始说法        | `string` |
 
 #### Datetime Slot
+用于表示复杂的时间实体，使用该槽位类型的实体有：
++ sys.date
++ sys.date.freq
++ sys.datetime
++ sys.datetime.freq
++ sys.datetime.duration
++ sys.datetime.future
 
 | 参数       | 描述                                       | 类型       |
 | -------- | ---------------------------------------- | -------- |
@@ -225,6 +264,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `origin` | 用户原始说法                                   | `string` |
 
 #### Normal Datetime value
+用于常规的时间表示，比如今天、明年等
 
 | 参数              | 描述                                | 类型       |
 | --------------- | --------------------------------- | -------- |
@@ -234,6 +274,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `datetime.time` | 24小时制时间，如“23:59:59"               | `string` |
 
 #### Interval Datetime value
+用于表示时间间隔的实体，比如这周末、明后天等
 
 | 参数      | 描述                                | 类型       |
 | ------- | --------------------------------- | -------- |
@@ -242,6 +283,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `end`   | 同Normal Datetime Value的`datetime` | `string` |
 
 #### Repeat Datetime value
+用于表示循环时间的实体，比如每周一、每个工作日等
 
 | 参数           | 描述                                       | 类型       |
 | ------------ | ---------------------------------------- | -------- |
@@ -252,6 +294,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `end`        | 同Normal Datetime Value的`datetime`        | `object` |
 
 #### SessionEndedRequest 参数说明
+当用户主动退出该技能或者技能回复数据出现问题时，叮当会给叮当发送`SessionEndedRequest`。
 
 | 参数              | 描述                                       | 类型       |
 | --------------- | ---------------------------------------- | -------- |
@@ -279,6 +322,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 注意：对该请求的响应内容不能包含`Dialog`类型的指令。
 
 #### RetryMeta
+目前只支持[支付](#payment支付指令)指令信息的回传。
 
 | 参数              | 描述                                       | 类型      |
 | ---------------  | ------------------------------------------- | -------- |
@@ -336,8 +380,10 @@ Content-Type: application/json;charset=UTF-8
 | `directives`        | 指令列表，支持的类型有：<br>+ AudioPlayer 类型的指令<br>+ Display 类型的指令<br>+ Dialog 类型的指令 | `array`   | 否                       |
 
 ### AudioPlayer类型的指令
+该类型的指令用于指示腾讯叮当终端执行音频播控相关的操作。
 
 #### AudioPlayer.Play指令
+播放音频列表。
 
 + 消息样例
 
@@ -424,6 +470,7 @@ Content-Type: application/json;charset=UTF-8
 ![](./pic/custom_skill_render_newsbodytemplate.png)
 
 ##### NewsBodyTemplate1 单图文模板
+目前单图文卡片只支持3行文本（约54个汉字）显示，多于3行的内容将隐藏。
 
 + 消息样例
 
@@ -458,6 +505,7 @@ Content-Type: application/json;charset=UTF-8
 ![](./pic/custom_skill_render_newsbodytemplate1.png)
 
 ##### TextBodyTemplate 单文本模板
+目前单图文卡片只支持3行文本显示，多于3行的内容将隐藏。
 
 - 消息样例
 
@@ -538,7 +586,7 @@ Content-Type: application/json;charset=UTF-8
 | 参数            | 描述   | 类型       | 必须   |
 | ------------- | ---- | -------- | ---- |
 | `title`       | 标题文本 | `string` | 是    |
-| `description` | 描述文本 | `string` | 否    |
+| `description` | 内容描述文本，一般用于对标题的补充，对内容的进一步说明 | `string` | 否    |
 
 ##### Image Object 参数说明
 
@@ -557,7 +605,7 @@ Content-Type: application/json;charset=UTF-8
 
 | 参数                   | 描述     | 类型       | 必须   |
 | -------------------- | ------ | -------- | ---- |
-| `contentDescription` | 图片内容描述 | `string` | 否    |
+| `contentDescription` | 图片内容描述，**该字段只用于图片加载中、加载失败情况下，替代图片显示用途，正常情况下不显示** | `string` | 否    |
 | `source`             | 图片源    | `object` | 是    |
 | `source.url`         | 图片源URL | `string` | 是    |
 
@@ -583,8 +631,14 @@ Content-Type: application/json;charset=UTF-8
 ### Dialog 类型的指令
 
 #### Dialog.ElicitSlot指令
-
+用于向用户询问某个槽位，用户的回答将被填充到该槽位中。
 + 消息样例
+
+> **用户**：叮当叮当，帮我打个车
+>   *技能返回`Dialog.ElicitSlot`指令，指明`slotToElicit`为`destination`*
+> **叮当**：请问你要去哪里？
+> **用户**：公司
+>   *叮当将“公司”提取为`destination`的槽位值*
 
 ```json
 {
@@ -614,6 +668,7 @@ Content-Type: application/json;charset=UTF-8
 
 
 ### Payment类型的指令
+支付指令主要用于在语音交互中向终端发起支付请求，以便让用户完成支付，更多关于订单创建、订单查询、退款等支付相关的接口请查阅[支付说明文档](./pay.md)。
 #### Payment.Pay指令
 
 + 消息样例
