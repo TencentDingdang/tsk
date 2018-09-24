@@ -97,7 +97,8 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
         "applicationId": "sssssskill.......id"
       },
       "user": {
-        "userId": "uuuuuuuu....id"
+        "userId": "uuuuuuuu....id",
+        "accessToken": "account....token"
       }
     }
   },
@@ -157,7 +158,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | ------------- | ---------------------------------------- | -------- |
 | `application` | 当前技能的信息，用于验证该请求正确指向你的服务，其中：<br>+ ` applicationId`：技能ID，你可以在腾讯叮当技能平台上找到该ID | `object` |
 | `device`      | 当前与技能交互的设备信息：<br>+ `deviceId`：转换的设备ID，唯一标识一台设备；<br>+  `supportedInterfaces`：当前设备支持的接口类型，` AudioPlayer {}`表示该设备支持` AudioPlayer`接口 | `object` |
-| `user`        | 当前与技能交互的用户信息：<br>+ `userId`：转换的用户ID，唯一标识一个叮当用户，**用户重新关注技能后可能产生新的用户ID**； | `object` |
+| `user`        | 当前与技能交互的用户信息：<br>+ `userId`：转换的用户ID，唯一标识一个叮当用户，**用户重新关注技能后可能产生新的用户ID**；<br>+ `accessToken`：用户在第三方系统的账号标识，仅在账号连接成功后才会提供，查阅[账号连接](./account_linking.md)了解更多相关信息。 | `object` |
 
 ### Request Object 参数说明
 
