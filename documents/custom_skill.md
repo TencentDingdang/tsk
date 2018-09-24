@@ -164,6 +164,13 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 当用户以文字或语音的形式与你的技能进行交互时，腾讯叮当会给技能服务发送一个标准类型的请求（如：`LaunchRequest`、`IntentRequest`、`SessionEndedRequest`）。
 
 #### LaunchRequest 参数说明
+LaunchRequest在用户初次进入技能并且没有明确意图的时候发送给技能，比如：
+
+> **用户**：叮当叮当，打开QQ音乐
+>   *叮当发送`LaunchRequest`到技能*
+>   *技能可以给出欢迎语，并播放热门歌曲*
+> **叮当**：欢迎使用QQ音乐，最动听的音乐送给我最喜欢的你
+
 
 | 参数          | 描述                         | 类型       |
 | ----------- | -------------------------- | -------- |
@@ -173,6 +180,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `queryText` | 用户的Query                              | `string` |
 
 #### IntentRequest 参数说明
+当用户有明确的意图时，腾讯叮当将发送`IntentRequest`到技能，并指明当前意图和提取出的槽位。
 
 | 参数             | 描述                                       | 类型       |
 | -------------- | ---------------------------------------- | -------- |
@@ -197,6 +205,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `slots.slotName.values[].value.type` | 参数值类型，可选值有：<br>`text`：普通文本类型；<br>`unit`：度量单位类型；<br>`address`：地址类型；<br>`datetime`：时间类型； | `string` |
 
 #### Text Slot
+文本类型槽位，也是最常用的槽位类型，所有的自定义实体、大部分的系统实体都会返回该类型槽位。
 
 | 参数       | 描述         | 类型       |
 | -------- | ---------- | -------- |
@@ -205,6 +214,13 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `origin` | 用户原始说法     | `string` |
 
 #### Unit Slot
+用于表示带单位的实体，比如长度、货币等。使用该类型槽位的实体有：
++ sys.unit：所有单位
++ sys.unit.currency：货币
++ sys.unit.length：长度
++ sys.unit.duration：时间
++ sys.unit.age：年龄
+
 
 | 参数       | 描述         | 类型       |
 | -------- | ---------- | -------- |
@@ -214,6 +230,10 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `origin` | 用户原始说法     | `string` |
 
 #### Address Slot
+用于表示复杂地址类型的实体，比如“广东省深圳市南山区深南大道10000号腾讯大厦”，使用该槽位类型的实体有：
++ sys.geo.province
++ sys.geo.county
++ sys.geo.address
 
 | 参数         | 描述            | 类型       |
 | ---------- | ------------- | -------- |
@@ -228,6 +248,13 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `origin`   | 用户原始说法        | `string` |
 
 #### Datetime Slot
+用于表示复杂的时间实体，使用该槽位类型的实体有：
++ sys.date
++ sys.date.freq
++ sys.datetime
++ sys.datetime.freq
++ sys.datetime.duration
++ sys.datetime.future
 
 | 参数       | 描述                                       | 类型       |
 | -------- | ---------------------------------------- | -------- |
@@ -236,6 +263,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `origin` | 用户原始说法                                   | `string` |
 
 #### Normal Datetime value
+用于常规的时间表示，比如今天、明年等
 
 | 参数              | 描述                                | 类型       |
 | --------------- | --------------------------------- | -------- |
@@ -245,6 +273,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `datetime.time` | 24小时制时间，如“23:59:59"               | `string` |
 
 #### Interval Datetime value
+用于表示时间间隔的实体，比如这周末、明后天等
 
 | 参数      | 描述                                | 类型       |
 | ------- | --------------------------------- | -------- |
@@ -253,6 +282,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `end`   | 同Normal Datetime Value的`datetime` | `string` |
 
 #### Repeat Datetime value
+用于表示循环时间的实体，比如每周一、每个工作日等
 
 | 参数           | 描述                                       | 类型       |
 | ------------ | ---------------------------------------- | -------- |
@@ -263,6 +293,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `end`        | 同Normal Datetime Value的`datetime`        | `object` |
 
 #### SessionEndedRequest 参数说明
+当用户主动退出该技能或者技能回复数据出现问题时，叮当会给叮当发送`SessionEndedRequest`。
 
 | 参数              | 描述                                       | 类型       |
 | --------------- | ---------------------------------------- | -------- |
@@ -290,6 +321,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 注意：对该请求的响应内容不能包含`Dialog`类型的指令。
 
 #### RetryMeta
+目前只支持[支付](#payment支付指令)指令信息的回传。
 
 | 参数              | 描述                                       | 类型      |
 | ---------------  | ------------------------------------------- | -------- |
@@ -347,8 +379,10 @@ Content-Type: application/json;charset=UTF-8
 | `directives`        | 指令列表，支持的类型有：<br>+ AudioPlayer 类型的指令<br>+ Display 类型的指令<br>+ Dialog 类型的指令 | `array`   | 否                       |
 
 ### AudioPlayer类型的指令
+该类型的指令用于指示腾讯叮当终端执行音频播控相关的操作。
 
 #### AudioPlayer.Play指令
+播放音频列表。
 
 + 消息样例
 
@@ -435,6 +469,7 @@ Content-Type: application/json;charset=UTF-8
 ![](./pic/custom_skill_render_newsbodytemplate.png)
 
 ##### NewsBodyTemplate1 单图文模板
+目前单图文卡片只支持3行文本（约54个汉字）显示，多于3行的内容将隐藏。
 
 + 消息样例
 
@@ -469,6 +504,7 @@ Content-Type: application/json;charset=UTF-8
 ![](./pic/custom_skill_render_newsbodytemplate1.png)
 
 ##### TextBodyTemplate 单文本模板
+目前单图文卡片只支持3行文本显示，多于3行的内容将隐藏。
 
 - 消息样例
 
@@ -549,7 +585,7 @@ Content-Type: application/json;charset=UTF-8
 | 参数            | 描述   | 类型       | 必须   |
 | ------------- | ---- | -------- | ---- |
 | `title`       | 标题文本 | `string` | 是    |
-| `description` | 描述文本 | `string` | 否    |
+| `description` | 内容描述文本，一般用于对标题的补充，对内容的进一步说明 | `string` | 否    |
 
 ##### Image Object 参数说明
 
@@ -568,7 +604,7 @@ Content-Type: application/json;charset=UTF-8
 
 | 参数                   | 描述     | 类型       | 必须   |
 | -------------------- | ------ | -------- | ---- |
-| `contentDescription` | 图片内容描述 | `string` | 否    |
+| `contentDescription` | 图片内容描述，**该字段只用于图片加载中、加载失败情况下，替代图片显示用途，正常情况下不显示** | `string` | 否    |
 | `source`             | 图片源    | `object` | 是    |
 | `source.url`         | 图片源URL | `string` | 是    |
 
@@ -594,8 +630,14 @@ Content-Type: application/json;charset=UTF-8
 ### Dialog 类型的指令
 
 #### Dialog.ElicitSlot指令
-
+用于向用户询问某个槽位，用户的回答将被填充到该槽位中。
 + 消息样例
+
+> **用户**：叮当叮当，帮我打个车
+>   *技能返回`Dialog.ElicitSlot`指令，指明`slotToElicit`为`destination`*
+> **叮当**：请问你要去哪里？
+> **用户**：公司
+>   *叮当将“公司”提取为`destination`的槽位值*
 
 ```json
 {
@@ -625,6 +667,7 @@ Content-Type: application/json;charset=UTF-8
 
 
 ### Payment类型的指令
+支付指令主要用于在语音交互中向终端发起支付请求，以便让用户完成支付，更多关于订单创建、订单查询、退款等支付相关的接口请查阅[支付说明文档](./pay.md)。
 #### Payment.Pay指令
 
 + 消息样例
