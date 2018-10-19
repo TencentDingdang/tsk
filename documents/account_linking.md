@@ -103,6 +103,7 @@ Host: server.example.com
 ```
 
 + 参数说明
+
 | 参数名         | 描述                 | 必需 |
 |----------------|---------------------|------|
 | response_type | 固定值`code`          | 是 |
@@ -117,6 +118,7 @@ Location: https://client.example.com/cb?code=SplxlOBeZQQYbYS6WxSbIA&state=xyz
 ```
 
 + 参数说明
+
 | 参数名         | 描述                 | 必需 |
 |----------------|---------------------|------|
 | code          | 授权服务生成的授权码，将用于后续请求AccessToken的流程。建议code有效期不超过10分钟，并只能消费一次   | 是 |
@@ -134,6 +136,7 @@ grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA&redirect_uri=https%3A%
 ```
 
 + 参数说明
+
 | 参数名         | 描述                 | 必需 |
 |----------------|---------------------|------|
 | grant_type     | 固定值`authorization_code`   | 是 |
@@ -157,6 +160,7 @@ Content-Type: application/json;charset=UTF-8
 ```
 
 + 参数说明
+
 | 参数名         | 描述                 | 必需 |
 |----------------|---------------------|------|
 | access_token   | 访问令牌，**建议在有效期之后或者在AccessToken被刷新之后保持5秒左右有效** | 是 |
@@ -178,6 +182,7 @@ grant_type=refresh_token&refresh_token=tGzv3JOkF0XG5Qx2TlKWIA
 ```
 
 + 参数说明
+
 | 参数名         | 描述                 | 必需 |
 |----------------|---------------------|------|
 | grant_type     | 固定值`refresh_token`   | 是 |
@@ -200,6 +205,7 @@ Content-Type: application/json;charset=UTF-8
 ```
 
 + 参数说明
+
 | 参数名         | 描述                 | 必需 |
 |----------------|---------------------|------|
 | access_token   | AccessToken         | 是 |
