@@ -112,8 +112,8 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
       "name": "string",
       "confirmationStatus": "string",
       "slots": {
-        "SlotName": {
-          "name": "string",
+        "{{SlotName}}": {
+          "name": "{{SlotName}}",
           "confirmationStatus": "string",
           "values": [{
             "value": {
@@ -128,6 +128,8 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
   }
 }
 ```
+
+> `{{SlotName}}`是技能在开放平台定义的槽位名，`request.intent.slots`可能有多个槽位，取决于对话过程中提取的。
 
 ### 请求参数说明
 
@@ -657,17 +659,26 @@ Content-Type: application/json;charset=UTF-8
   "slotToElicit": "string",
   "updatedIntent": {
     "name": "string",
-    "confirmationStatus": "NONE",
+    "confirmationStatus": "string",
     "slots": {
-      "string": {
-        "name": "string",
-        "value": "string",
-        "confirmationStatus": "NONE"
+      "{{SlotName}}": {
+        "name": "{{SlotName}}",
+        "confirmationStatus": "string",
+        "values": [{
+          "value": {
+            "type": "text",
+            "value": "string",
+            "origin": "string"
+          }
+        }]
       }
     }
   }
 }
 ```
+
+> + `{{SlotName}}`是技能在开放平台定义的槽位名，在上述打车例子中，将替换成`destination`。
+> + **`updatedIntent`中的语义信息将覆盖原有会话的语义信息**，因此如果技能只是更新部分槽位值，应该在请求中`request.intent`的基础上进行更新。
 
 + 参数说明
 
