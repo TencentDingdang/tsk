@@ -1,5 +1,7 @@
 # 自定义技能
 
+> 文档更新于2018/11/22，点击查看[更新日志](#更新日志)。
+
 自定义技能一般用于满足用户特定的需求，比如：天气技能用于满足用户天气查询的需求，当用户说“叮当叮当，深圳今天天气怎样”，天气技能根据解析出来的参数查询深圳当天的天气，并组织成文本回复语交给腾讯叮当利用语音合成技术（TTS，Text-To-Speech）播报给用户。交互流程大致如下图：
 ![](./pic/custome-skill-interaction-flow.png)
 详细流程描述为：
@@ -54,6 +56,8 @@
 		- [Dialog.ElicitSlot指令](#dialogelicitslot指令)
 	- [Payment类型的指令](#payment类型的指令)
 		- [Payment.Pay指令](#paymentpay指令)
+- [更新日志](#更新日志)
+	- [2018/11/22 更新](#20181122-更新)
 
 <!-- /TOC -->
 
@@ -112,8 +116,8 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
       "name": "string",
       "confirmationStatus": "string",
       "slots": {
-        "SlotName": {
-          "name": "string",
+        "{{SlotName}}": {
+          "name": "{{SlotName}}",
           "confirmationStatus": "string",
           "values": [{
             "value": {
@@ -128,6 +132,8 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
   }
 }
 ```
+
+> `{{SlotName}}`是技能在开放平台定义的槽位名，`request.intent.slots`可能有多个槽位，取决于对话过程中提取的。
 
 ### 请求参数说明
 
@@ -657,17 +663,26 @@ Content-Type: application/json;charset=UTF-8
   "slotToElicit": "string",
   "updatedIntent": {
     "name": "string",
-    "confirmationStatus": "NONE",
+    "confirmationStatus": "string",
     "slots": {
-      "string": {
-        "name": "string",
-        "value": "string",
-        "confirmationStatus": "NONE"
+      "{{SlotName}}": {
+        "name": "{{SlotName}}",
+        "confirmationStatus": "string",
+        "values": [{
+          "value": {
+            "type": "text",
+            "value": "string",
+            "origin": "string"
+          }
+        }]
       }
     }
   }
 }
 ```
+
+> + `{{SlotName}}`是技能在开放平台定义的槽位名，在上述打车例子中，将替换成`destination`。
+> + **`updatedIntent`中的语义信息将覆盖原有会话的语义信息**，因此如果技能只是更新部分槽位值，应该在请求中`request.intent`的基础上进行更新。
 
 + 参数说明
 
@@ -717,3 +732,9 @@ Content-Type: application/json;charset=UTF-8
 | `order.items[].totalFee`   | 总金额，单位为分                           | `int`    | 是    |
 | `order.items[].price`      | 商品单价，单位为分                         | `int`    | 是    |
 | `order.items[].count`      | 商品数量                                  | `int`    | 是    |
+
+
+## 更新日志
+### 2018/11/22 更新
+
++ 修正`updateIntent`中`slots[]`结构的错误；
