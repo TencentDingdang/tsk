@@ -441,6 +441,41 @@ Content-Type: application/json;charset=UTF-8
 | `playlist[].info.subtitle` | 音频的副标题，可以是音乐类别或歌手姓名                      | `string` | 否    |
 | `playlist[].info.art`      | 音频的封面图片，见[Image Object](#image-object-参数说明) | `object` | 否    |
 
+
+### VideoPlayer类型的指令
+该类型的指令用于指示腾讯叮当终端执行视频播控相关的操作。
+
+#### VideoPlayer.Play指令
+播放视频列表。
+
++ 消息样例
+
+```json
+{
+  "type": "VideoPlayer.Play",
+  "playBehavior": "string",
+  "playlist": [
+    {
+      "stream": {
+        "url": "string",
+        "token": "string"
+      }
+    }
+  ]
+}
+```
+
++ 参数说明
+
+| 参数                         | 描述                                       | 类型       | 必需   |
+| -------------------------- | ---------------------------------------- | -------- | ---- |
+| `type`                     | 固定值：`VideoPlayer.Play`                   | `string` | 是    |
+| `playBehavior`             | 控制视频播放操作及播放队列，有两种取值：<br />+ `REPLACE_ALL`：默认值，停止当前正在播放的视频并替换队列中的所有视频；<br />+ `ENQUEUE`：将视频加入到播放队列的末尾;    | `string` | 否    |
+| `playlist`                 | 播放列表                                     | `array`  | 是    |
+| `playlist[].stream`        | 视频流                                      | `object` | 是    |
+| `playlist[].stream.url`    | 视频流地址                                    | `string` | 是    |
+| `playlist[].stream.token`  | 唯一标识此视频流的token                           | `string` | 是    |
+
 ### Display类型的指令
 
 #### Display.RenderTemplate指令
