@@ -43,6 +43,8 @@
 	- [Response Object 参数说明](#response-object-参数说明)
 	- [AudioPlayer类型的指令](#audioplayer类型的指令)
 		- [AudioPlayer.Play指令](#audioplayerplay指令)
+	- [VideoPlayer类型的指令](#videoplayer类型的指令)
+		- [VideoPlayer.Play指令](#videoplayerplay指令)
 	- [Display类型的指令](#display类型的指令)
 		- [Display.RenderTemplate指令](#displayrendertemplate指令)
 			- [NewsBodyTemplate 单图文模板](#newsbodytemplate-单图文模板)
