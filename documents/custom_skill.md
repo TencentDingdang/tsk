@@ -11,7 +11,7 @@
 4. “天气”技能根据意图、槽位确定要执行查询深圳当天天气的任务，并将结果组织成自然语言返回给腾讯叮当；
 5. 腾讯叮当语音合成服务将技能给出的播报文本合成语音播报给用户：“深圳今天阴转小雨，出门记得带伞”。
 
-搭建自定义技能大体分两部分工作，一部分是意图设计，另一部分是服务开发，以下内容主要介绍技能服务需要支持的协议。
+搭建自定义技能大体分两部分工作，一部分是意图设计，另一部分是服务开发，以下内容主要介绍服务开发部分技能服务需要支持的协议。
 
 <!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
@@ -65,6 +65,16 @@
 <!-- /TOC -->
 
 ## 请求数据格式
+用户发起请求后，叮当会将该请求按照约定的协议以HTTP请求的方式转发给技能服务。**对于腾讯云SCF部署的技能的，由于技能只能接收到`context`数据，因此数据会按照如下格式将原有的HTTP数据封装到`context`中**：
+
+```json
+{
+	"header": {
+		"Authorization": "TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612ab1ff0301e1016d817c02350a2b76ea62e0"
+	},
+	"body": "{\"version\": \"1.0\",\"session\": {\".......}"
+}
+```
 
 ### HTTP Header
 
@@ -136,7 +146,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 }
 ```
 
-> `{{SlotName}}`是技能在开放平台定义的槽位名，`request.intent.slots`可能有多个槽位，取决于对话过程中提取的。
+> `{{SlotName}}`是技能在开放平台定义的槽位名，`request.intent.slots`可能有多个槽位，比如Query“明天上海的天气怎样”，可以提取到“明天”、“上海”两个槽位。
 
 ### 请求参数说明
 
@@ -145,7 +155,7 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | `version` | 协议的版本标识，当前版本为`1.0`                       | `string` |
 | `session` | 当前会话的相关信息，该数据只在请求类型为`LaunchRequest`、`IntentRequest`、`SessionEndedRequest`时才传到技能服务中，详细说明见[Session Object](#session-object-参数说明) | `object` |
 | `context` | 包含了当前腾讯叮当服务和设备的状态信息，该信息会包含在所有对技能的请求中。详细说明见[Context Object](#context-object-参数说明) | `object` |
-| `request` | 用户的详细请求内容，包含了几种不同类型的请求：<br>+ 标准请求<br>      - `LaunchRequest`：用户未明确意图的请求；<br>      - `IntentRequest`：用户指定意图的请求；<br>      - `SessionEndedRequest`：技能由于其他原因被动关闭时，这种类型的请求会被发送到你的服务上；<br><br>详细说明见[Request Object](#request-object-参数说明) | `object` |
+| `request` | 用户的详细请求内容，包含了几种不同类型的请求：<br>+ 标准请求<br>      - `LaunchRequest`：用户未明确意图的首次请求，如“打开贝瓦儿歌”；<br>      - `IntentRequest`：用户指定意图的请求；<br>      - `SessionEndedRequest`：技能由于其他原因被动关闭时，这种类型的请求会被发送到你的服务上；<br><br>详细说明见[Request Object](#request-object-参数说明) | `object` |
 
 ### Session Object 参数说明
 
@@ -179,7 +189,9 @@ LaunchRequest在用户初次进入技能并且没有明确意图的时候发送�
 > **用户**：叮当叮当，打开QQ音乐
 >   *叮当发送`LaunchRequest`到技能*
 >   *技能可以给出欢迎语，并播放热门歌曲*
-> **叮当**：欢迎使用QQ音乐，最动听的音乐送给我最喜欢的你
+> **叮当**：欢迎使用QQ音乐，最动听的音乐送给我最喜欢的你。
+>   *技能也可以给出欢迎语，并询问用户想听什么歌*
+> **叮当**：欢迎使用QQ音乐，请问你想听什么歌？
 
 
 | 参数          | 描述                         | 类型       |
@@ -197,7 +209,7 @@ LaunchRequest在用户初次进入技能并且没有明确意图的时候发送�
 | `type`         | 固定为`IntentRequest`                       | `string` |
 | `requestId`    | 当前请求的ID，用于唯一标识一次请求                       | `string` |
 | `timestamp`    | 用户请求时间戳，ISO 8601格式的UTC+0时间               | `string` |
-| ` dialogState` | 用于表示多轮对话状态的枚举值，包括：` STARTED`：会话开始；<br>` IN_PROGRESS`：会话进行中；<br>` COMPLETED`：会话结束，只有在使用了`Dialog.Delegate`之后才能收到该类型的请求； | `string` |
+| ` dialogState` | 用于表示多轮对话状态的枚举值，包括：` STARTED`：会话开始；<br>` IN_PROGRESS`：会话进行中；<br>` COMPLETED`：会话结束； | `string` |
 | `queryText`    | 用户的Query                                 | `string` |
 | `intent`       | 用户的意图信息，包含意图名称及提取的参数信息，详细说明见[intent](#intent-object-参数说明) | `object` |
 
@@ -215,7 +227,7 @@ LaunchRequest在用户初次进入技能并且没有明确意图的时候发送�
 | `slots.slotName.values[].value.type` | 参数值类型，可选值有：<br>`text`：普通文本类型；<br>`unit`：度量单位类型；<br>`address`：地址类型；<br>`datetime`：时间类型； | `string` |
 
 #### Text Slot
-文本类型槽位，也是最常用的槽位类型，所有的自定义实体、大部分的系统实体都会返回该类型槽位。
+文本类型槽位，也是最常用的槽位类型，**所有的自定义实体、大部分的系统实体都会以该类型进行表示**。
 
 | 参数       | 描述         | 类型       |
 | -------- | ---------- | -------- |
@@ -224,7 +236,7 @@ LaunchRequest在用户初次进入技能并且没有明确意图的时候发送�
 | `origin` | 用户原始说法     | `string` |
 
 #### Unit Slot
-用于表示带单位的实体，比如长度、货币等。使用该类型槽位的实体有：
+用于表示带单位的系统实体，比如长度、货币等。使用该类型槽位的实体有：
 + sys.unit：所有单位
 + sys.unit.currency：货币
 + sys.unit.length：长度
@@ -240,7 +252,7 @@ LaunchRequest在用户初次进入技能并且没有明确意图的时候发送�
 | `origin` | 用户原始说法     | `string` |
 
 #### Address Slot
-用于表示复杂地址类型的实体，比如“广东省深圳市南山区深南大道10000号腾讯大厦”，使用该槽位类型的实体有：
+用于表示复杂地址类型的系统实体，比如“广东省深圳市南山区深南大道10000号腾讯大厦”，使用该槽位类型的实体有：
 + sys.geo.province
 + sys.geo.county
 + sys.geo.address
@@ -258,7 +270,7 @@ LaunchRequest在用户初次进入技能并且没有明确意图的时候发送�
 | `origin`   | 用户原始说法        | `string` |
 
 #### Datetime Slot
-用于表示复杂的时间实体，使用该槽位类型的实体有：
+用于表示复杂的系统时间实体，使用该槽位类型的实体有：
 + sys.date
 + sys.date.freq
 + sys.datetime
@@ -312,7 +324,7 @@ LaunchRequest在用户初次进入技能并且没有明确意图的时候发送�
 
 > **用户**：叮当叮当，退出QQ音乐
 >   *叮当发送`SessionEndRequest`到技能*
->   *技能可以给出退出话术*
+>   *技能可以给出退出回复语*
 > **叮当**：再见，QQ音乐期待下次与你相遇
 
 
@@ -502,8 +514,7 @@ Content-Type: application/json;charset=UTF-8
     "type": "NewsBodyTemplate",
     "textContent": TextContent,
     "backgroundImage": Image,
-    "backgroundAudio": Audio,
-    "url": "string"
+    "backgroundAudio": Audio
   }
 }
 ```
@@ -519,7 +530,6 @@ Content-Type: application/json;charset=UTF-8
 | `template.textContent`     | 文本内容，见[TextContent Object](#textcontent-object-参数说明) | `object` | 是    |
 | `template.backgroundImage` | 背景图片，见[Image Object](#image-object-参数说明) | `object` | 否    |
 | `template.backgroundAudio` | 背景音频，见[Audio Object](#audio-object-参数说明) | `object` | 否    |
-| `template.url`             | 跳转链接                                     | `string` | 否    |
 
 + 卡片样例
 ![](./pic/custom_skill_render_newsbodytemplate.png)
@@ -537,8 +547,7 @@ Content-Type: application/json;charset=UTF-8
     "type": "NewsBodyTemplate1",
     "textContent": TextContent,
     "backgroundImage": Image,
-    "backgroundAudio": Audio,
-    "url": "string"
+    "backgroundAudio": Audio
   }
 }
 ```
@@ -554,7 +563,6 @@ Content-Type: application/json;charset=UTF-8
 | `template.textContent`     | 文本内容，见[TextContent Object](#textcontent-object-参数说明) | `object` | 是    |
 | `template.backgroundImage` | 背景图片，见[Image Object](#image-object-参数说明) | `object` | 否    |
 | `template.backgroundAudio` | 背景音频，见[Audio Object](#audio-object-参数说明) | `object` | 否    |
-| `template.url`             | 跳转链接                                     | `string` | 否    |
 
 + 卡片样例
 ![](./pic/custom_skill_render_newsbodytemplate1.png)
@@ -601,8 +609,7 @@ Content-Type: application/json;charset=UTF-8
     "listItems":[{
         "token": "string",
         "textContent": TextContent,
-        "image": Image,
-        "url": "string"
+        "image": Image
       }]
   }
 }
@@ -620,7 +627,6 @@ Content-Type: application/json;charset=UTF-8
 | `template.listItems[].token`       | 列表元素的token                               | `string` | 是    |
 | `template.listItems[].image`       | 图片，见[Image Object](#image-object-参数说明)   | `object` | 否    |
 | `template.listItems[].textContent` | 文本内容，见[TextContent Object](#textcontent-object-参数说明) | `object` | 是    |
-| `template.url`                     | 跳转链接                                     | `string` | 否    |
 
 + 卡片样例
 ![](./pic/custom_skill_render_horizontiallisttemplate.png)
@@ -684,9 +690,10 @@ Content-Type: application/json;charset=UTF-8
 | `source.url` | 音频URL | `string` | 是    |
 
 ### Dialog 类型的指令
+Dialog类型的指令主要用于对话流程的控制，比如更新会话过程中的意图、参数，控制会话流程等。一个技能在完成一次响应可能需要经过多次的往返询问和确认。
 
 #### Dialog.ElicitSlot指令
-用于向用户询问某个槽位，用户的回答将被填充到该槽位中。
+用于向用户询问某个槽位，用户的下一次正确回答将被填充到该槽位中。
 + 消息样例
 
 > **用户**：叮当叮当，帮我打个车
@@ -698,13 +705,13 @@ Content-Type: application/json;charset=UTF-8
 ```json
 {
   "type": "Dialog.ElicitSlot",
-  "slotToElicit": "string",
+  "slotToElicit": "{{SlotName1}}",
   "updatedIntent": {
     "name": "string",
     "confirmationStatus": "string",
     "slots": {
-      "{{SlotName}}": {
-        "name": "{{SlotName}}",
+      "{{SlotName2}}": {
+        "name": "{{SlotName2}}",
         "confirmationStatus": "string",
         "values": [{
           "value": {

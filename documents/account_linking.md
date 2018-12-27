@@ -88,7 +88,7 @@ Authorization Code Grant的授权流程如下图所示：
 
     client_id=s6BhdRkqt3&client_secret=7Fjfp0ZBr1KtDRbnfVdmIw&grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
     ```
-+ HTTP Method：腾讯叮当在进行账号连接时，按照RFC6749给出的示例，分别以不同的HTTP方法请求授权服务：
++ HTTP Method：腾讯叮当在进行账号连接时，按照RFC6749给出的示例，分别以不同的HTTP方法请求授权服务，**但是我们建议授权服务应该兼容至少`GET`/`POST`两种HTTP请求方法**：
     - 用户登陆授权过程，由浏览器请求技能配置的授权地址，使用`GET`方式；
     - code换取AccessToken过程，由叮当后台发起`POST`请求；
     - 刷新AccessToken过程，由叮当后台发起`POST`请求；
