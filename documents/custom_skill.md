@@ -1,6 +1,6 @@
 # 自定义技能
 
-> 文档更新于2018/12/26，点击查看[更新日志](#更新日志)。
+> 文档更新于2018/12/29，点击查看[更新日志](#更新日志)。
 
 自定义技能一般用于满足用户特定的需求，比如：天气技能用于满足用户天气查询的需求，当用户说“叮当叮当，深圳今天天气怎样”，天气技能根据解析出来的参数查询深圳当天的天气，并组织成文本回复语交给腾讯叮当利用语音合成技术（TTS，Text-To-Speech）播报给用户。交互流程大致如下图：
 ![](./pic/custome-skill-interaction-flow.png)
@@ -61,6 +61,7 @@
 - [更新日志](#更新日志)
 	- [2018/11/22 更新](#20181122-更新)
 	- [2018/12/26 更新](#20181226-更新)
+	- [2018/12/29 更新](#20181229-更新)
 
 <!-- /TOC -->
 
@@ -383,6 +384,9 @@ Content-Type: application/json;charset=UTF-8
       "type": "PlainText",
       "text": "Plain text string to speak"
     },
+    "card": {
+      "type": "LinkAccount"
+    },
     "directives": [
       {
         "type": "InterfaceName.Directive"
@@ -410,6 +414,8 @@ Content-Type: application/json;charset=UTF-8
 | `outputSpeech.text` | 回答用户的语音内容                                | `string`  | 是（当`type`为`PlainText`时） |
 | `shouldEndSession`  | 用于通知腾讯叮当是否结束当前会话                         | `boolean` | 否                       |
 | `directives`        | 指令列表，支持的类型有：<br>+ AudioPlayer 类型的指令<br>+ Display 类型的指令<br>+ Dialog 类型的指令 | `array`   | 否                       |
+| `card`              | 卡片数据，可以在需要用户登陆时弹出账号连接卡片 | `object` | 否 |
+| `card.type`         | 卡片类型，目前支持：<br> + `LinkAccount`: 账号连接卡片 | 否 |
 
 ### AudioPlayer类型的指令
 该类型的指令用于指示腾讯叮当终端执行音频播控相关的操作。
@@ -787,3 +793,7 @@ Dialog类型的指令主要用于对话流程的控制，比如更新会话过�
 ### 2018/12/26 更新
 
 + 新增`VideoPlayer.Play`指令；
+
+### 2018/12/29 更新
+
++ 新增账号连接`card`卡片说明；
