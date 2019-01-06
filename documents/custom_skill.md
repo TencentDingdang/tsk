@@ -509,6 +509,7 @@ Content-Type: application/json;charset=UTF-8
 不同的模板在终端上其元素的大小、位置可能不尽相同，但是每个模板都是经过精心选择并有相对稳定的结构。技能开发者在构造包含显示模板的响应时，可以根据需要精心选择合适的模板，并配上响应的文本、图像、音频，给用户提供最好的、一致的体验。
 
 ##### NewsBodyTemplate 单图文模板
+目前单图文模板只支持3行文本（约54个汉字）显示，多于3行的内容将隐藏。
 
 + 消息样例
 
@@ -541,7 +542,7 @@ Content-Type: application/json;charset=UTF-8
 ![](./pic/custom_skill_render_newsbodytemplate.png)
 
 ##### NewsBodyTemplate1 单图文模板
-目前单图文卡片只支持3行文本（约54个汉字）显示，多于3行的内容将隐藏。
+目前单图文模板1只支持2行文本显示，多于2行的内容将隐藏。
 
 + 消息样例
 
@@ -574,7 +575,6 @@ Content-Type: application/json;charset=UTF-8
 ![](./pic/custom_skill_render_newsbodytemplate1.png)
 
 ##### TextBodyTemplate 单文本模板
-目前单图文卡片只支持3行文本显示，多于3行的内容将隐藏。
 
 - 消息样例
 
