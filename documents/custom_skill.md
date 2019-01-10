@@ -410,12 +410,32 @@ Content-Type: application/json;charset=UTF-8
 | 参数                  | 描述                                       | 类型        | 必需                      |
 | ------------------- | ---------------------------------------- | --------- | ----------------------- |
 | `outputSpeech`      | 回答用户的语音内容                                | `object`  | 是                       |
-| `outputSpeech.type` | 当前只支持`PlainText`                         | `string`  | 是                       |
+| `outputSpeech.type` | 可选的取值有：<br>+ `PlainText`：普通文本；<br>+ `ssml`：语音合成标记语言格式； | `string`  | 是                       |
 | `outputSpeech.text` | 回答用户的语音内容                                | `string`  | 是（当`type`为`PlainText`时） |
+| `outputSpeech.ssml` | 语音合成标记语言格式的内容，目前只支持`audio`标签，并且只能                         | `string`  | 是（当`type`为`SSML`时） |
 | `shouldEndSession`  | 用于通知腾讯叮当是否结束当前会话                         | `boolean` | 否                       |
 | `directives`        | 指令列表，支持的类型有：<br>+ AudioPlayer 类型的指令<br>+ Display 类型的指令<br>+ Dialog 类型的指令 | `array`   | 否                       |
 | `card`              | 卡片数据，可以在需要用户登陆时弹出账号连接卡片 | `object` | 否 |
 | `card.type`         | 卡片类型，目前支持：<br> + `LinkAccount`: 账号连接卡片 | 否 |
+
+### OutputSpeech Object 参数说明
+
+| 参数                  | 描述                                       | 类型        | 必需                      |
+| ------------------- | ---------------------------------------- | --------- | ----------------------- |
+| `outputSpeech.type` | 可选的取值有：<br>+ `PlainText`：普通文本；<br>+ `SSML`：语音合成标记语言格式； | `string`  | 是                       |
+| `outputSpeech.text` | 回答用户的语音内容                                | `string`  | 是（当`type`为`PlainText`时） |
+| `outputSpeech.ssml` | 语音合成标记语言格式的内容                         | `string`  | 是（当`type`为`SSML`时） |
+
++ SSML示例
+
+```
+<speak>跟着杨超越一起喊<audio src="http://softfile.3g.qq.com/myapp/soft_imtt/dingdangMusic/kaluli.mp3"></audio></speak>
+```
+
+> 目前SSML只支持`audio`标签，并且`audio`标签只能放在开头或结尾处，并且对音频内容有以下要求及建议：
+> 1. 音频格式需要是：MPEG ADTS, layer III, v2, 64kbps, 16kHz, Monaural；
+> 2. 音频地址需要是互联网可访问的；
+> 3. 建议音频内容长度不超过10秒；
 
 ### AudioPlayer类型的指令
 该类型的指令用于指示腾讯叮当终端执行音频播控相关的操作。
