@@ -1,6 +1,6 @@
 # 腾讯叮当智能家居开放平台接入文档
 
-> 文档更新于2018/09/23，点击查看[更新日志](#更新日志)。
+> 文档更新于2019/01/14[更新日志](#更新日志)。
 
 腾讯叮当智能家居开放平台提供了一套与智能硬件厂商的云端进行数据交互的规范，能够让接入腾讯叮当智能家居开放平台的智能设备具备接受语音进行控制的能力。腾讯叮当智能家居技能是通过给智能硬件厂商的云端发送指令的方式，通过厂商的云端进行控制智能硬件的，因此，接入腾讯叮当智能家居开放平台的设备首先需要具备通过云端进行设备管理的能力。交互流程如下图所示：
 ![](./pic/smarthome-skill-interaction-flow.png)
@@ -57,6 +57,14 @@
 		- [GetAirPM25Response](#getairpm25response)
 		- [GetHumidityRequest](#gethumidityrequest)
 		- [GetHumidityResponse](#gethumidityresponse)
+	- [技能上报事件](#技能上报事件)
+		- [上报事件消息校验](#上报事件消息校验)
+			- [scope 参数说明](#scope-参数说明)
+		- [事件响应数据](#事件响应数据)
+			- [上报成功响应](#上报成功响应)
+			- [上报错误的响应](#上报错误的响应)
+		- [AddOrUpdateReportRequest](#addorupdatereportrequest)
+		- [DeleteReportRequest](#deletereportrequest)
 	- [错误消息](#错误消息)
 		- [OperationNotAllowedForUserError](#operationnotallowedforusererror)
 		- [TargetNotProvisionedError](#targetnotprovisionederror)
@@ -85,6 +93,7 @@
 		- [UnsupportedTargetSettingError](#unsupportedtargetsettingerror)
 		- [UnexpectedInformationReceivedError](#unexpectedinformationreceivederror)
 - [更新日志](#更新日志)
+	- [2019/01/14 更新](#20190114-更新)
 	- [2018/09/23 更新](#20180923-更新)
 
 <!-- /TOC -->
@@ -160,6 +169,7 @@
 | 参数            | 参数功能                | 参数类型   | 必需   |
 | ------------- | ------------------- | ------ | ---- |
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
+| `openUid` | 叮当平台上转换的用户Id，当技能事件消息校验方式为Basic Authorization时传递，其他时候该字段为空 | string | 是    |
 
 
 + 示例
@@ -171,7 +181,8 @@
         "version": "1"
     },
     "payload": {
-        "accessToken": "{{OAuth Token}}"
+        "accessToken": "{{OAuth Token}}",
+		"openUid": "abcdef1234567890"
     }
 }
 ```
@@ -204,7 +215,8 @@
 | `version`                    | 设备版本号，最长不超过128个英文字符                      | string | 是    |
 | `friendlyName`               | 设备名称，最长不超过128个英文字符                       | string | 是    |
 | `friendlyDescription`        | 设备描述，最长不超过128个英文字符                       | string | 否    |
-| `isReachable`                | 设备是否在线                                   | bool   | 是    |
+| `isReachable`                | 设备是否在线                                           | bool   | 是    |
+| `autoConnect`                | 设备是否自动设为已关联                                  | bool   | 否    |
 | `actions[]`                  | 设备支持的控制动作，全量控制列表如下 | array  | 是    |
 | `additionalApplianceDetails` | 附加的键值对，腾讯智能家居会将这些信息透传给设备控制服务，数据最长不超过5000字节 | object | 否    |
 
@@ -345,6 +357,7 @@
             "friendlyDescription":"颜色随心变",
             "friendlyName":"卧室的灯",
             "isReachable":true,
+			"autoConnect": true,
             "manufacturerName":"飞利浦",
             "modelName":"Hue",
             "version":"your software version number here."
@@ -1796,6 +1809,192 @@
 }
 ```
 
+### 技能上报事件
+技能可以主动上报设备属性变化、设备发现事件给叮当，帮助叮当主动更新用户的设备信息、状态。一个主动上报事件的基本格式如下：
+
+```http
+POST /smarthome/events HTTP/1.1
+Host: aiwx.html5.qq.com
+Authorization: Basic {{base64(client_id:client_secret)}}
+Content-Type: application/json
+
+{
+    "header":{
+       "name":"AddOrUpdateReportRequest",
+       "namespace":"Dingdang.ConnectedHome.Discovery",
+       "version":"1"
+    },
+   "payload":{
+	  "scope": {
+		  "type": "BasicToken",
+		  "token": "{{base64(client_id:client_secret)}}",
+		  "openUid": "0123456789abcdef",
+		  "skillId": "0123456789"
+	  },
+	  ...
+   }
+}
+```
+
+#### 上报事件消息校验
+技能上报的时间消息通过Basic Authorization进行校验，技能上报事件时，需要在HTTP头带上`Authorization`，以`Basic {{base64(client_id:client_secret)}}`方式进行格式化。并且在消息结构体中填充`scope`字段；
+
+##### scope 参数说明
+
+|字段名|描述|类型|必须|
+|------|---|----|----|
+|`type`|Token的类型，目前支持`BasicToken`|string|是|
+|`token`|当类型为`BasicToken`时，先将`client_id` + ':' + `client_secret`进行拼接，再用Base64编码|string|是|
+|`openUid`|叮当用户的OpenId，可以从`DiscoverAppliancesRequest`中获取|string|是（`type`为`BasicToken`时)|
+|`skillId`|智能家居技能Id，可以从开放平台的技能基础信息中查到|string|是（`type`为`BasicToken`时)|
+
+#### 事件响应数据
+
+技能向叮当发送事件后，上报成功后会收到`202 Accepted`的响应或者其他错误信息，以下列举了你可能收到的响应及其对应的描述。
+
+##### 上报成功响应
+
+|HTTP 响应|描述|
+|---------|---|
+|`202 Accepted`|事件上报成功|
+
+##### 上报错误的响应
+
+|HTTP 响应|Payload错误码|描述|
+|---------|------------|----|
+|`400 Bad Request`|INVALID_REQUEST_EXCEPTION|事件上报失败，可能是缺少字段或者数据格式错误|
+|`401 Unauthorized`|INVALID_ACCESS_TOKEN_EXCEPTION|Token校验不通过|
+|`403 Forbidden`|INSUFFICIENT_PERMISSION_EXCEPTION|技能无上报事件权限|
+|`404 Not Found`|SKILL_NOT_FOUND_EXCEPTION|技能不存在|
+|`500 Internal Server Error`|INTERNAL_SERVICE_EXCEPTION|叮当服务器不能处理该请求，出现该错误的时候可能消息格式不是一个标准的json，建议重试3-5次，每次间隔1s以上，若问题依然存在，请联系平台接口人|
+
+以下是一个`INVALID_ACCESS_TOKEN_EXCEPTION`错误的响应消息示例：
+```http
+HTTP/1.1 401 Unauthorized
+Connection: close
+
+{
+  "header": {
+    "namespace": "System",
+    "name": "Exception"
+  },
+  "payload": {
+    "code": "INVALID_ACCESS_TOKEN_EXCEPTION",
+    "description": "Unauthorized"
+  }
+}
+```
+
+#### AddOrUpdateReportRequest
+当用户添加新的设备或者更新已有设备的命名等信息，技能可以向叮当发送该事件信息。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Discovery |
+| `name`      | AddOrUpdateReportRequest          |
+
+
++ Payload
+
+| 参数                       | 参数功能                                     | 参数类型  | 必需   |
+| ------------------------ | ---------------------------------------- | ----- | ---- |
+| `scope`                | 权限校验信息  | object | 是    |
+| `appliances[]`           | 用户账号所关联的有新增或修改的设备列表，设备信息的字段具体含义参照[discoveredAppliance](#discoveredappliance) | array | 是    |
+
++ 示例
+
+```json
+{
+    "header": {
+        "name": "AddOrUpdateReportRequest",
+        "namespace": "Dingdang.ConnectedHome.Discovery",
+        "version": "1"
+    },
+    "payload": {
+ 	  "scope": {
+ 		  "type": "BasicToken",
+ 		  "token": "{{base64(client_id:client_secret)}}",
+ 		  "openUid": "0123456789abcdef",
+ 		  "skillId": "0123456789"
+ 	  },
+      "appliances":[
+         {
+            "actions":[
+               "turnOn",
+               "turnOff",
+               "setColor",
+               "setPercentage",
+               "incrementPercentage",
+               "decrementPercentage"
+            ],
+            "applianceTypes":[
+               "LIGHT"
+            ],
+            "additionalApplianceDetails":{
+               "extraDetail1":"optionalDetailForSkillAdapterToReferenceThisDevice",
+               "extraDetail2":"There can be multiple entries",
+               "extraDetail3":"but they should only be used for reference purposes.",
+               "extraDetail4":"This is not a suitable place to maintain current device state"
+            },
+            "applianceId":"unique-light-device-id",
+            "friendlyDescription":"颜色随心变",
+            "friendlyName":"卧室的灯",
+            "isReachable":true,
+			"autoConnect": true,
+            "manufacturerName":"飞利浦",
+            "modelName":"Hue",
+            "version":"your software version number here."
+         }
+      ]
+    }
+}
+```
+
+#### DeleteReportRequest
+当用户移除了已有设备，技能可以向叮当发送该事件信息。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Discovery |
+| `name`      | DeleteReportRequest              |
+
+
++ Payload
+
+| 参数                       | 参数功能                                     | 参数类型  | 必需   |
+| ------------------------ | ---------------------------------------- | ----- | ---- |
+| `scope`                | 权限校验信息  | object | 是    |
+| `appliances[]`           | 用户账号所关联的有新增或修改的设备列表 | array  | 是    |
+| `appliances[].applianceId`   | 设备Id                          | string | 是    |
+
++ 示例
+
+```json
+{
+    "header": {
+        "name": "DeleteReportRequest",
+        "namespace": "Dingdang.ConnectedHome.Discovery",
+        "version": "1"
+    },
+    "payload": {
+ 	  "scope": {
+ 		  "type": "BasicToken",
+ 		  "token": "{{base64(client_id:client_secret)}}",
+ 		  "openUid": "0123456789abcdef",
+ 		  "skillId": "0123456789"
+ 	  },
+      "appliances":[{
+            "applianceId":"unique-device-id"
+         }
+      ]
+    }
+}
+```
+
 
 ### 错误消息
 #### OperationNotAllowedForUserError
@@ -2341,6 +2540,11 @@ Access Token由于非过期的原因失效
 ```
 
 ## 更新日志
+### 2019/01/14 更新
+
++ `DiscoverAppliancesResponse`新增`openUid`用于事件上报；
++ 新增Event Gateway接口，支持`AddOrUpdateReportRequest`/`DeleteReportRequest`上报设备变化；
+
 ### 2018/09/23 更新
 
 + 修改指令IncrementPercentageRequest、IncrementPercentageConfirmation、DecrementPercentageRequest、DecrementPercentageConfirmation、SetPercentageRequest、 SetPercentageConfirmation为意义更加明确的[IncrementBrightnessPercentageRequest](#incrementbrightnesspercentagerequest)、[IncrementBrightnessPercentageConfirmation](#incrementbrightnesspercentageconfirmation)、[DecrementBrightnessPercentageRequest](#decrementbrightnesspercentagerequest)、[DecrementBrightnessPercentageConfirmation](#decrementbrightnesspercentageconfirmation)、[SetBrightnessPercentageRequest](#setbrightnesspercentagerequest)、 [SetBrightnessPercentageConfirmation](#setbrightnesspercentageconfirmation)；
