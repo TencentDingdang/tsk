@@ -1566,6 +1566,688 @@
 }
 ```
 
+### 电视频道控制类消息
+
+#### SetTVChannelRequest
+当用户请求设置为指定的电视频道时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | SetTVChannelRequest      |
+
+
++ Payload
+
+| 参数            | 参数功能                | 参数类型   | 必需   |
+| ------------- | ------------------- | ------ | ---- |
+| `accessToken` | 用户账号对应的Access Token | string | 是    |
+| `appliance`   | 需要调节的设备             | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `targetChannel.value`                | 目标频道，当值为`int`型表示目标的频道排序；当值为`string`类型，表示频道名称   | string/int | 是    |
+
+
++ 示例
+用户问法：“叮当叮当，电视频道调到5”
+```json
+{
+    "header": {
+        "name": "SetTVChannelRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        },
+        "targetChannel": {
+          "value": 5
+        }
+      }
+    }
+}
+```
+
+#### SetTVChannelConfirmation
+设置频道成功后，技能返回该消息给叮当。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | SetTVChannelConfirmation     |
+
+
++ Payload
+
+| 参数                    | 参数功能     | 参数类型   | 必需   |
+| --------------------- | -------- | ------ | ---- |
+| `channel.value` | 当前频道 | string/int | 否  |
+| `previousState.channel.value` | 之前的频道 | string/int | 否  |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "SetTVChannelConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+		"channel": {
+			"value": 5
+		},
+		"previousState": {
+			"channel": {
+				"value": 8
+			}
+		}
+    }
+}
+```
+
+#### IncrementTVChannelRequest
+当用户请求调高电视频道时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | IncrementTVChannelRequest      |
+
+
++ Payload
+
+| 参数            | 参数功能                | 参数类型   | 必需   |
+| ------------- | ------------------- | ------ | ---- |
+| `accessToken` | 用户账号对应的Access Token | string | 是    |
+| `appliance`   | 需要调节的设备             | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `deltaValue.value`   | 调高的频道值   | int | 是   |
+
+
++ 示例
+用户问法：“叮当叮当，电视调到下一个频道”
+```json
+{
+    "header": {
+        "name": "IncrementTVChannelRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        },
+        "deltaValue": {
+          "value": 1
+        }
+      }
+    }
+}
+```
+
+#### IncrementTVChannelConfirmation
+设置频道成功后，技能返回该消息给叮当。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | IncrementTVChannelConfirmation     |
+
+
++ Payload
+
+| 参数                    | 参数功能     | 参数类型   | 必需   |
+| --------------------- | -------- | ------ | ---- |
+| `channel.value` | 当前频道 | string/int | 否  |
+| `previousState.channel.value` | 之前的频道 | string/int | 否  |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "IncrementTVChannelConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+		"channel": {
+			"value": 6
+		},
+		"previousState": {
+			"channel": {
+				"value": 5
+			}
+		}
+    }
+}
+```
+
+#### DecrementTVChannelRequest
+当用户请求调低电视频道时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | DecrementTVChannelRequest      |
+
+
++ Payload
+
+| 参数            | 参数功能                | 参数类型   | 必需   |
+| ------------- | ------------------- | ------ | ---- |
+| `accessToken` | 用户账号对应的Access Token | string | 是    |
+| `appliance`   | 需要调节的设备             | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `deltaValue.value`   | 调低的频道值   | int | 是   |
+
+
++ 示例
+用户问法：“叮当叮当，电视调到下一个频道”
+```json
+{
+    "header": {
+        "name": "DecrementTVChannelRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        },
+        "deltaValue": {
+          "value": 1
+        }
+      }
+    }
+}
+```
+
+#### DecrementTVChannelConfirmation
+设置频道成功后，技能返回该消息给叮当。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | DecrementTVChannelConfirmation     |
+
+
++ Payload
+
+| 参数                    | 参数功能     | 参数类型   | 必需   |
+| --------------------- | -------- | ------ | ---- |
+| `channel.value` | 当前频道 | string/int | 否  |
+| `previousState.channel.value` | 之前的频道 | string/int | 否  |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "DecrementTVChannelConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+		"channel": {
+			"value": 5
+		},
+		"previousState": {
+			"channel": {
+				"value": 6
+			}
+		}
+    }
+}
+```
+
+#### RetrunTVChannelRequest
+当用户返回上一个电视频道时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | RetrunTVChannelRequest      |
+
+
++ Payload
+
+| 参数            | 参数功能                | 参数类型   | 必需   |
+| ------------- | ------------------- | ------ | ---- |
+| `accessToken` | 用户账号对应的Access Token | string | 是    |
+| `appliance`   | 需要调节的设备             | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+
+
++ 示例
+用户问法：“叮当叮当，电视返回上一个频道”
+```json
+{
+    "header": {
+        "name": "RetrunTVChannelRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        }
+      }
+    }
+}
+```
+
+#### ReturnTVChannelConfirmation
+设置频道成功后，技能返回该消息给叮当。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | ReturnTVChannelConfirmation     |
+
+
++ Payload
+
+| 参数                    | 参数功能     | 参数类型   | 必需   |
+| --------------------- | -------- | ------ | ---- |
+| `channel.value` | 当前频道 | string/int | 否  |
+| `previousState.channel.value` | 之前的频道 | string/int | 否  |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "ReturnTVChannelConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+		"channel": {
+			"value": 5
+		},
+		"previousState": {
+			"channel": {
+				"value": 8
+			}
+		}
+    }
+}
+```
+
+
+### 音量控制类消息
+
+#### SetVolumeRequest
+当用户请求设置为指定的音量时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | SetVolumeRequest      |
+
+
++ Payload
+
+| 参数            | 参数功能                | 参数类型   | 必需   |
+| ------------- | ------------------- | ------ | ---- |
+| `accessToken` | 用户账号对应的Access Token | string | 是    |
+| `appliance`   | 需要调节的设备             | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `targetVolume.value`                | 目标音量，取值范围是[0, 100]  | int | 是    |
+
+
++ 示例
+用户问法：“叮当叮当，电视音量调到15”
+```json
+{
+    "header": {
+        "name": "SetVolumeRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        },
+        "targetVolume": {
+          "value": 15
+        }
+      }
+    }
+}
+```
+
+#### SetVolumeConfirmation
+设置音量成功后，技能返回该消息给叮当。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | SetVolumeConfirmation     |
+
+
++ Payload
+
+| 参数                    | 参数功能     | 参数类型   | 必需   |
+| --------------------- | -------- | ------ | ---- |
+| `volume.value` | 当前音量 | int | 否  |
+| `previousState.volume.value` | 之前音量 | int | 否  |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "SetVolumeConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+		"volume": {
+			"value": 15
+		},
+		"previousState": {
+			"volume": {
+				"value": 10
+			}
+		}
+    }
+}
+```
+
+#### IncrementVolumeRequest
+当用户请求调大音量时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | IncrementVolumeRequest      |
+
+
++ Payload
+
+| 参数            | 参数功能                | 参数类型   | 必需   |
+| ------------- | ------------------- | ------ | ---- |
+| `accessToken` | 用户账号对应的Access Token | string | 是    |
+| `appliance`   | 需要调节的设备             | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `deltaValue.value`                | 调高的音量值  | int | 是    |
+
+
++ 示例
+用户问法：“叮当叮当，电视音量调高”
+```json
+{
+    "header": {
+        "name": "IncrementVolumeRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        },
+        "deltaValue": {
+          "value": 5
+        }
+      }
+    }
+}
+```
+
+#### IncrementVolumeConfirmation
+设置音量成功后，技能返回该消息给叮当。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | IncrementVolumeConfirmation     |
+
+
++ Payload
+
+| 参数                    | 参数功能     | 参数类型   | 必需   |
+| --------------------- | -------- | ------ | ---- |
+| `volume.value` | 当前音量 | int | 否  |
+| `previousState.volume.value` | 之前音量 | int | 否  |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "IncrementVolumeConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+		"volume": {
+			"value": 15
+		},
+		"previousState": {
+			"volume": {
+				"value": 10
+			}
+		}
+    }
+}
+```
+
+
+#### DecrementVolumeRequest
+当用户请求调小音量时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                           |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | DecrementVolumeRequest      |
+
+
++ Payload
+
+| 参数            | 参数功能                | 参数类型   | 必需   |
+| ------------- | ------------------- | ------ | ---- |
+| `accessToken` | 用户账号对应的Access Token | string | 是    |
+| `appliance`   | 需要调节的设备             | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `deltaValue.value`                | 调高的音量值  | int | 是    |
+
+
++ 示例
+用户问法：“叮当叮当，电视音量调低”
+```json
+{
+    "header": {
+        "name": "DecrementVolumeRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        },
+        "deltaValue": {
+          "value": 5
+        }
+      }
+    }
+}
+```
+
+#### DecrementVolumeConfirmation
+设置音量成功后，技能返回该消息给叮当。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | DecrementVolumeConfirmation     |
+
+
++ Payload
+
+| 参数                    | 参数功能     | 参数类型   | 必需   |
+| --------------------- | -------- | ------ | ---- |
+| `volume.value` | 当前音量 | int | 否  |
+| `previousState.volume.value` | 之前音量 | int | 否  |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "DecrementVolumeConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+		"volume": {
+			"value": 15
+		},
+		"previousState": {
+			"volume": {
+				"value": 20
+			}
+		}
+    }
+}
+```
+
+
+#### SetVolumeMuteRequest
+当用户请求静音或取消静音时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                           |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | SetVolumeMuteRequest      |
+
+
++ Payload
+
+| 参数            | 参数功能                | 参数类型   | 必需   |
+| ------------- | ------------------- | ------ | ---- |
+| `accessToken` | 用户账号对应的Access Token | string | 是    |
+| `appliance`   | 需要调节的设备             | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `muteState.value`  | 静音状态，`ON`：静音，`OFF`：取消静音  | string | 是    |
+
+
++ 示例
+用户问法：“叮当叮当，电视静音”
+```json
+{
+    "header": {
+        "name": "SetVolumeMuteRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        },
+        "muteState": {
+          "value": "ON"
+        }
+      }
+    }
+}
+```
+
+#### SetVolumeMuteConfirmation
+设置静音状态成功后，技能返回该消息给叮当。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | DecrementVolumeConfirmation     |
+
+
++ Payload
+
+| 参数                    | 参数功能     | 参数类型   | 必需   |
+| --------------------- | -------- | ------ | ---- |
+| `muteState.value` | 当前静音状态 | string | 否  |
+| `previousState.muteState.value` | 之前静音状态 | string | 否  |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "DecrementVolumeConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+		"muteState": {
+			"value": "ON"
+		},
+		"previousState": {
+			"muteState": {
+				"value": "OFF"
+			}
+		}
+    }
+}
+```
 
 ### 设备信息查询类消息
 
