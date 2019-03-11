@@ -835,6 +835,241 @@
 }
 ```
 
+#### IncrementColorTemperatureRequest
+用户请求调高设备的色温值时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | IncrementColorTemperatureRequest           |
+
+
++ Payload
+
+| 参数                      | 参数功能                                     | 参数类型   | 必需   |
+| ----------------------- | ---------------------------------------- | ------ | ---- |
+| `accessToken`           | 用户账号对应的Access Token                      | string | 是    |
+| `appliance`             | 需要调节的设备                                  | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+
+
++ 示例
+用户问法：“叮当叮当，把客厅的灯色温调冷”
+```json
+{
+    "header": {
+        "name": "IncrementColorTemperatureRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        }
+      }
+    }
+}
+```
+
+#### IncrementColorTemperatureConfirmation
+技能调高色温值成功后，返回该消息。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | IncrementColorTemperatureConfirmation      |
+
+
++ Payload
+
+| 参数   | 参数功能 | 参数类型 | 必需   |
+| ---- | ---- | ---- | ---- |
+| `achievedState.colorTemperature.value` | 设置后的色温值，单位为开尔文 | int    | 是    |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "IncrementColorTemperatureConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "achievedState": {
+            "colorTemperature": {
+                "value": 2700
+            }
+        }
+    }
+}
+```
+
+#### DecrementColorTemperatureRequest
+用户请求调低设备的色温值时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | DecrementColorTemperatureRequest           |
+
+
++ Payload
+
+| 参数                      | 参数功能                                     | 参数类型   | 必需   |
+| ----------------------- | ---------------------------------------- | ------ | ---- |
+| `accessToken`           | 用户账号对应的Access Token                      | string | 是    |
+| `appliance`             | 需要调节的设备                                  | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+
+
++ 示例
+用户问法：“叮当叮当，把客厅的灯色温调暖”
+```json
+{
+    "header": {
+        "name": "DecrementColorTemperatureRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        }
+      }
+    }
+}
+```
+
+#### DecrementColorTemperatureConfirmation
+技能调低色温值成功后，返回该消息。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | DecrementColorTemperatureConfirmation      |
+
+
++ Payload
+
+| 参数   | 参数功能 | 参数类型 | 必需   |
+| ---- | ---- | ---- | ---- |
+| `achievedState.colorTemperature.value` | 设置后的色温值，单位为开尔文 | int    | 是    |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "DecrementColorTemperatureConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "achievedState": {
+            "colorTemperature": {
+                "value": 2700
+            }
+        }
+    }
+}
+```
+
+
+#### SetColorTemperatureRequest
+用户请求设置设备的色温值时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | SetColorTemperatureRequest           |
+
+
++ Payload
+
+| 参数                      | 参数功能                                     | 参数类型   | 必需   |
+| ----------------------- | ---------------------------------------- | ------ | ---- |
+| `accessToken`           | 用户账号对应的Access Token                      | string | 是    |
+| `appliance`             | 需要调节的设备                                  | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `colorTemperature.value` | 目标色温，单位为开尔文 | int | 是    |
+
+
++ 示例
+用户问法：“叮当叮当，把客厅的灯色温调到3000”
+```json
+{
+    "header": {
+        "name": "SetColorTemperatureRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+		},
+		"colorTemperature": {
+			"value": 3000
+		}
+      }
+    }
+}
+```
+
+#### SetColorTemperatureConfirmation
+技能设置色温值成功后，返回该消息。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | SetColorTemperatureConfirmation      |
+
+
++ Payload
+
+| 参数   | 参数功能 | 参数类型 | 必需   |
+| ---- | ---- | ---- | ---- |
+| `achievedState.colorTemperature.value` | 设置后的色温值，单位为开尔文 | int    | 是    |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "SetColorTemperatureConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "achievedState": {
+            "colorTemperature": {
+                "value": 3000
+            }
+        }
+    }
+}
+```
 
 ### 温度调节类消息
 这类消息用于调节设备的温度。
