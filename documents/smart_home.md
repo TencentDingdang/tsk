@@ -1547,7 +1547,7 @@
 ```json
 {
     "header": {
-        "name": "ChargeConfirmation",
+        "name": "SetModeConfirmation",
         "namespace": "Dingdang.ConnectedHome.Control",
         "version": "1"
     },
