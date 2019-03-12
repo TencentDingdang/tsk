@@ -1051,10 +1051,10 @@
         "appliance": {
           "applianceId": "{{Device ID}}",
           "additionalApplianceDetails": {}
-		},
-		"colorTemperature": {
-			"value": 3000
-		}
+        },
+        "colorTemperature": {
+            "value": 3000
+        }
       }
     }
 }
@@ -1901,14 +1901,14 @@
         "version": "1"
     },
     "payload": {
-		"channel": {
-			"value": 5
-		},
-		"previousState": {
-			"channel": {
-				"value": 8
-			}
-		}
+        "channel": {
+            "value": 5
+        },
+        "previousState": {
+            "channel": {
+                "value": 8
+            }
+        }
     }
 }
 ```
@@ -1986,14 +1986,14 @@
         "version": "1"
     },
     "payload": {
-		"channel": {
-			"value": 6
-		},
-		"previousState": {
-			"channel": {
-				"value": 5
-			}
-		}
+        "channel": {
+            "value": 6
+        },
+        "previousState": {
+            "channel": {
+                "value": 5
+            }
+        }
     }
 }
 ```
@@ -2071,14 +2071,14 @@
         "version": "1"
     },
     "payload": {
-		"channel": {
-			"value": 5
-		},
-		"previousState": {
-			"channel": {
-				"value": 6
-			}
-		}
+        "channel": {
+            "value": 5
+        },
+        "previousState": {
+            "channel": {
+                "value": 6
+            }
+        }
     }
 }
 ```
@@ -2152,14 +2152,14 @@
         "version": "1"
     },
     "payload": {
-		"channel": {
-			"value": 5
-		},
-		"previousState": {
-			"channel": {
-				"value": 8
-			}
-		}
+        "channel": {
+            "value": 5
+        },
+        "previousState": {
+            "channel": {
+                "value": 8
+            }
+        }
     }
 }
 ```
@@ -2240,14 +2240,14 @@
         "version": "1"
     },
     "payload": {
-		"volume": {
-			"value": 15
-		},
-		"previousState": {
-			"volume": {
-				"value": 10
-			}
-		}
+        "volume": {
+            "value": 15
+        },
+        "previousState": {
+            "volume": {
+                "value": 10
+            }
+        }
     }
 }
 ```
@@ -2325,14 +2325,14 @@
         "version": "1"
     },
     "payload": {
-		"volume": {
-			"value": 15
-		},
-		"previousState": {
-			"volume": {
-				"value": 10
-			}
-		}
+        "volume": {
+            "value": 15
+        },
+        "previousState": {
+            "volume": {
+                "value": 10
+            }
+        }
     }
 }
 ```
@@ -2411,14 +2411,14 @@
         "version": "1"
     },
     "payload": {
-		"volume": {
-			"value": 15
-		},
-		"previousState": {
-			"volume": {
-				"value": 20
-			}
-		}
+        "volume": {
+            "value": 15
+        },
+        "previousState": {
+            "volume": {
+                "value": 20
+            }
+        }
     }
 }
 ```
@@ -2497,14 +2497,14 @@
         "version": "1"
     },
     "payload": {
-		"muteState": {
-			"value": "ON"
-		},
-		"previousState": {
-			"muteState": {
-				"value": "OFF"
-			}
-		}
+        "muteState": {
+            "value": "ON"
+        },
+        "previousState": {
+            "muteState": {
+                "value": "OFF"
+            }
+        }
     }
 }
 ```
@@ -3285,28 +3285,28 @@ Access Token由于非过期的原因失效
 ## 更新日志
 ### 2019/03/12 更新
 + 新增控制类指令：
-	- [IncrementColorTemperatureRequest](#incrementcolortemperaturerequest)
-	- [IncrementColorTemperatureConfirmation](#incrementcolortemperatureconfirmation)
-	- [DecrementColorTemperatureRequest](#decrementcolortemperaturerequest)
-	- [DecrementColorTemperatureConfirmation](#decrementcolortemperatureconfirmation)
-	- [SetColorTemperatureRequest](#setcolortemperaturerequest)
-	- [SetColorTemperatureConfirmation](#setcolortemperatureconfirmation)
-	- [SetTVChannelRequest](#settvchannelrequest)
-	- [SetTVChannelConfirmation](#settvchannelconfirmation)
-	- [IncrementTVChannelRequest](#incrementtvchannelrequest)
-	- [IncrementTVChannelConfirmation](#incrementtvchannelconfirmation)
-	- [DecrementTVChannelRequest](#decrementtvchannelrequest)
-	- [DecrementTVChannelConfirmation](#decrementtvchannelconfirmation)
-	- [RetrunTVChannelRequest](#retruntvchannelrequest)
-	- [ReturnTVChannelConfirmation](#returntvchannelconfirmation)
-	- [SetVolumeRequest](#setvolumerequest)
-	- [SetVolumeConfirmation](#setvolumeconfirmation)
-	- [IncrementVolumeRequest](#incrementvolumerequest)
-	- [IncrementVolumeConfirmation](#incrementvolumeconfirmation)
-	- [DecrementVolumeRequest](#decrementvolumerequest)
-	- [DecrementVolumeConfirmation](#decrementvolumeconfirmation)
-	- [SetVolumeMuteRequest](#setvolumemuterequest)
-	- [SetVolumeMuteConfirmation](#setvolumemuteconfirmation)
+    - [IncrementColorTemperatureRequest](#incrementcolortemperaturerequest)
+    - [IncrementColorTemperatureConfirmation](#incrementcolortemperatureconfirmation)
+    - [DecrementColorTemperatureRequest](#decrementcolortemperaturerequest)
+    - [DecrementColorTemperatureConfirmation](#decrementcolortemperatureconfirmation)
+    - [SetColorTemperatureRequest](#setcolortemperaturerequest)
+    - [SetColorTemperatureConfirmation](#setcolortemperatureconfirmation)
+    - [SetTVChannelRequest](#settvchannelrequest)
+    - [SetTVChannelConfirmation](#settvchannelconfirmation)
+    - [IncrementTVChannelRequest](#incrementtvchannelrequest)
+    - [IncrementTVChannelConfirmation](#incrementtvchannelconfirmation)
+    - [DecrementTVChannelRequest](#decrementtvchannelrequest)
+    - [DecrementTVChannelConfirmation](#decrementtvchannelconfirmation)
+    - [RetrunTVChannelRequest](#retruntvchannelrequest)
+    - [ReturnTVChannelConfirmation](#returntvchannelconfirmation)
+    - [SetVolumeRequest](#setvolumerequest)
+    - [SetVolumeConfirmation](#setvolumeconfirmation)
+    - [IncrementVolumeRequest](#incrementvolumerequest)
+    - [IncrementVolumeConfirmation](#incrementvolumeconfirmation)
+    - [DecrementVolumeRequest](#decrementvolumerequest)
+    - [DecrementVolumeConfirmation](#decrementvolumeconfirmation)
+    - [SetVolumeMuteRequest](#setvolumemuterequest)
+    - [SetVolumeMuteConfirmation](#setvolumemuteconfirmation)
 
 ### 2018/09/23 更新
 
