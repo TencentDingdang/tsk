@@ -1,6 +1,6 @@
 # 腾讯叮当智能家居开放平台接入文档
 
-> 文档更新于2018/09/23，点击查看[更新日志](#更新日志)。
+> 文档更新于2019/03/12，点击查看[更新日志](#更新日志)。
 
 腾讯叮当智能家居开放平台提供了一套与智能硬件厂商的云端进行数据交互的规范，能够让接入腾讯叮当智能家居开放平台的智能设备具备接受语音进行控制的能力。腾讯叮当智能家居技能是通过给智能硬件厂商的云端发送指令的方式，通过厂商的云端进行控制智能硬件的，因此，接入腾讯叮当智能家居开放平台的设备首先需要具备通过云端进行设备管理的能力。交互流程如下图所示：
 ![](./pic/smarthome-skill-interaction-flow.png)
@@ -30,6 +30,12 @@
 		- [DecrementBrightnessPercentageConfirmation](#decrementbrightnesspercentageconfirmation)
 		- [SetBrightnessPercentageRequest](#setbrightnesspercentagerequest)
 		- [SetBrightnessPercentageConfirmation](#setbrightnesspercentageconfirmation)
+		- [IncrementColorTemperatureRequest](#incrementcolortemperaturerequest)
+		- [IncrementColorTemperatureConfirmation](#incrementcolortemperatureconfirmation)
+		- [DecrementColorTemperatureRequest](#decrementcolortemperaturerequest)
+		- [DecrementColorTemperatureConfirmation](#decrementcolortemperatureconfirmation)
+		- [SetColorTemperatureRequest](#setcolortemperaturerequest)
+		- [SetColorTemperatureConfirmation](#setcolortemperatureconfirmation)
 	- [温度调节类消息](#温度调节类消息)
 		- [SetTemperatureRequest](#settemperaturerequest)
 		- [SetTemperatureConfirmation](#settemperatureconfirmation)
@@ -50,6 +56,24 @@
 	- [模式控制类消息](#模式控制类消息)
 		- [SetModeRequest](#setmoderequest)
 		- [SetModeConfirmation](#setmodeconfirmation)
+	- [电视频道控制类消息](#电视频道控制类消息)
+		- [SetTVChannelRequest](#settvchannelrequest)
+		- [SetTVChannelConfirmation](#settvchannelconfirmation)
+		- [IncrementTVChannelRequest](#incrementtvchannelrequest)
+		- [IncrementTVChannelConfirmation](#incrementtvchannelconfirmation)
+		- [DecrementTVChannelRequest](#decrementtvchannelrequest)
+		- [DecrementTVChannelConfirmation](#decrementtvchannelconfirmation)
+		- [RetrunTVChannelRequest](#retruntvchannelrequest)
+		- [ReturnTVChannelConfirmation](#returntvchannelconfirmation)
+	- [音量控制类消息](#音量控制类消息)
+		- [SetVolumeRequest](#setvolumerequest)
+		- [SetVolumeConfirmation](#setvolumeconfirmation)
+		- [IncrementVolumeRequest](#incrementvolumerequest)
+		- [IncrementVolumeConfirmation](#incrementvolumeconfirmation)
+		- [DecrementVolumeRequest](#decrementvolumerequest)
+		- [DecrementVolumeConfirmation](#decrementvolumeconfirmation)
+		- [SetVolumeMuteRequest](#setvolumemuterequest)
+		- [SetVolumeMuteConfirmation](#setvolumemuteconfirmation)
 	- [设备信息查询类消息](#设备信息查询类消息)
 		- [GetTemperatureReadingRequest](#gettemperaturereadingrequest)
 		- [GetTemperatureReadingResponse](#gettemperaturereadingresponse)
@@ -85,6 +109,7 @@
 		- [UnsupportedTargetSettingError](#unsupportedtargetsettingerror)
 		- [UnexpectedInformationReceivedError](#unexpectedinformationreceivederror)
 - [更新日志](#更新日志)
+	- [2019/03/12 更新](#20190312-更新)
 	- [2018/09/23 更新](#20180923-更新)
 
 <!-- /TOC -->
@@ -139,7 +164,7 @@
 | 命名空间                             | 功能说明                      | 指令名称列表                                   |
 | -------------------------------- | ------------------------- | ---------------------------------------- |
 | Dingdang.ConnectedHome.Discovery | 设备的发现和连接                  | • [DiscoverAppliancesRequest](#discoverappliancesrequest)<br />• [DiscoverAppliancesResponse](#discoverappliancesresponse) |
-| Dingdang.ConnectedHome.Control     | 已连接设备的控制，比如打开关闭、调高调低设备属性等 | • [TurnOnRequest](#turnonrequest)<br />• [TurnOnConfirmation](#turnonconfirmation)<br />• [TurnOffRequest](#turnoffrequest)<br />• [TurnOffConfirmation](#turnoffconfirmation)<br />• [SetColorRequest](#setcolorrequest)<br />• [SetColorConfirmation](#setcolorconfirmation)<br />• [IncrementBrightnessPercentageRequest](#incrementbrightnesspercentagerequest)<br />• [IncrementBrightnessPercentageConfirmation](#incrementbrightnesspercentageconfirmation)<br />• [DecrementBrightnessPercentageRequest](#decrementbrightnesspercentagerequest)<br />• [DecrementBrightnessPercentageConfirmation](#decrementbrightnesspercentageconfirmation)<br />• [SetBrightnessPercentageRequest](#setbrightnesspercentagerequest)<br />• [SetBrightnessPercentageConfirmation](#setbrightnesspercentageconfirmation)<br /> • [SetTemperatureRequest](#settemperaturerequest)<br /> • [SetTemperatureConfirmation](#settemperatureconfirmation)<br /> • [IncrementTemperatureRequest](#incrementtemperaturerequest)<br /> • [IncrementTemperatureConfirmation](#incrementtemperatureconfirmation)<br /> • [DecrementTemperatureRequest](#decrementtemperaturerequest)<br /> • [DecrementTemperatureConfirmation](#decrementtemperatureconfirmation)<br /> • [SetFanSpeedRequest](#setfanspeedrequest)<br /> • [SetFanSpeedConfirmation](#setfanspeedconfirmation)<br /> • [IncrementFanSpeedRequest](#incrementfanspeedrequest)<br /> • [IncrementFanSpeedConfirmation](#incrementfanspeedconfirmation)<br /> • [DecrementFanSpeedRequest](#decrementfanspeedrequest)<br /> • [DecrementFanSpeedConfirmation](#decrementfanspeedconfirmation)<br /> • [ChargeRequest](#chargerequest)<br /> • [ChargeConfirmation](#chargeconfirmation)<br /> • [SetModeRequest](#setmoderequest)<br /> • [SetModeConfirmation](#setmodeconfirmation) |
+| Dingdang.ConnectedHome.Control     | 已连接设备的控制，比如打开关闭、调高调低设备属性等 | • [TurnOnRequest](#turnonrequest)<br />• [TurnOnConfirmation](#turnonconfirmation)<br />• [TurnOffRequest](#turnoffrequest)<br />• [TurnOffConfirmation](#turnoffconfirmation)<br />• [SetColorRequest](#setcolorrequest)<br />• [SetColorConfirmation](#setcolorconfirmation)<br />• [IncrementBrightnessPercentageRequest](#incrementbrightnesspercentagerequest)<br />• [IncrementBrightnessPercentageConfirmation](#incrementbrightnesspercentageconfirmation)<br />• [DecrementBrightnessPercentageRequest](#decrementbrightnesspercentagerequest)<br />• [DecrementBrightnessPercentageConfirmation](#decrementbrightnesspercentageconfirmation)<br />• [SetBrightnessPercentageRequest](#setbrightnesspercentagerequest)<br />• [SetBrightnessPercentageConfirmation](#setbrightnesspercentageconfirmation)<br /> • [SetTemperatureRequest](#settemperaturerequest)<br /> • [SetTemperatureConfirmation](#settemperatureconfirmation)<br /> • [IncrementTemperatureRequest](#incrementtemperaturerequest)<br /> • [IncrementTemperatureConfirmation](#incrementtemperatureconfirmation)<br /> • [DecrementTemperatureRequest](#decrementtemperaturerequest)<br /> • [DecrementTemperatureConfirmation](#decrementtemperatureconfirmation)<br /> • [SetFanSpeedRequest](#setfanspeedrequest)<br /> • [SetFanSpeedConfirmation](#setfanspeedconfirmation)<br /> • [IncrementFanSpeedRequest](#incrementfanspeedrequest)<br /> • [IncrementFanSpeedConfirmation](#incrementfanspeedconfirmation)<br /> • [DecrementFanSpeedRequest](#decrementfanspeedrequest)<br /> • [DecrementFanSpeedConfirmation](#decrementfanspeedconfirmation)<br /> • [ChargeRequest](#chargerequest)<br /> • [ChargeConfirmation](#chargeconfirmation)<br /> • [SetModeRequest](#setmoderequest)<br /> • [SetModeConfirmation](#setmodeconfirmation)<br />• [IncrementColorTemperatureRequest](#incrementcolortemperaturerequest)<br />• [IncrementColorTemperatureConfirmation](#incrementcolortemperatureconfirmation)<br />• [DecrementColorTemperatureRequest](#decrementcolortemperaturerequest)<br />• [DecrementColorTemperatureConfirmation](#decrementcolortemperatureconfirmation)<br />• [SetColorTemperatureRequest](#setcolortemperaturerequest)<br />• [SetColorTemperatureConfirmation](#setcolortemperatureconfirmation)<br />• [SetTVChannelRequest](#settvchannelrequest)<br />• [SetTVChannelConfirmation](#settvchannelconfirmation)<br />• [IncrementTVChannelRequest](#incrementtvchannelrequest)<br />• [IncrementTVChannelConfirmation](#incrementtvchannelconfirmation)<br />• [DecrementTVChannelRequest](#decrementtvchannelrequest)<br />• [DecrementTVChannelConfirmation](#decrementtvchannelconfirmation)<br />• [RetrunTVChannelRequest](#retruntvchannelrequest)<br />• [ReturnTVChannelConfirmation](#returntvchannelconfirmation)<br />• [SetVolumeRequest](#setvolumerequest)<br />• [SetVolumeConfirmation](#setvolumeconfirmation)<br />• [IncrementVolumeRequest](#incrementvolumerequest)<br />• [IncrementVolumeConfirmation](#incrementvolumeconfirmation)<br />• [DecrementVolumeRequest](#decrementvolumerequest)<br />• [DecrementVolumeConfirmation](#decrementvolumeconfirmation)<br />• [SetVolumeMuteRequest](#setvolumemuterequest)<br />• [SetVolumeMuteConfirmation](#setvolumemuteconfirmation) |
 | Dingdang.ConnectedHome.Query        | 查询设备的状态或传感器检测的数值 |  • [GetTemperatureReadingRequest](#gettemperaturereadingrequest)<br /> • [GetTemperatureReadingResponse](#gettemperaturereadingresponse)<br /> • [GetAirPM25Request](#getairpm25request)<br /> • [GetAirPM25Response](#getairpm25response)<br /> • [GetHumidityRequest](#gethumidityrequest)<br /> • [GetHumidityResponse](#gethumidityresponse) |
 
 ### 设备发现消息
@@ -3258,6 +3283,31 @@ Access Token由于非过期的原因失效
 ```
 
 ## 更新日志
+### 2019/03/12 更新
++ 新增控制类指令：
+	- [IncrementColorTemperatureRequest](#incrementcolortemperaturerequest)
+	- [IncrementColorTemperatureConfirmation](#incrementcolortemperatureconfirmation)
+	- [DecrementColorTemperatureRequest](#decrementcolortemperaturerequest)
+	- [DecrementColorTemperatureConfirmation](#decrementcolortemperatureconfirmation)
+	- [SetColorTemperatureRequest](#setcolortemperaturerequest)
+	- [SetColorTemperatureConfirmation](#setcolortemperatureconfirmation)
+	- [SetTVChannelRequest](#settvchannelrequest)
+	- [SetTVChannelConfirmation](#settvchannelconfirmation)
+	- [IncrementTVChannelRequest](#incrementtvchannelrequest)
+	- [IncrementTVChannelConfirmation](#incrementtvchannelconfirmation)
+	- [DecrementTVChannelRequest](#decrementtvchannelrequest)
+	- [DecrementTVChannelConfirmation](#decrementtvchannelconfirmation)
+	- [RetrunTVChannelRequest](#retruntvchannelrequest)
+	- [ReturnTVChannelConfirmation](#returntvchannelconfirmation)
+	- [SetVolumeRequest](#setvolumerequest)
+	- [SetVolumeConfirmation](#setvolumeconfirmation)
+	- [IncrementVolumeRequest](#incrementvolumerequest)
+	- [IncrementVolumeConfirmation](#incrementvolumeconfirmation)
+	- [DecrementVolumeRequest](#decrementvolumerequest)
+	- [DecrementVolumeConfirmation](#decrementvolumeconfirmation)
+	- [SetVolumeMuteRequest](#setvolumemuterequest)
+	- [SetVolumeMuteConfirmation](#setvolumemuteconfirmation)
+
 ### 2018/09/23 更新
 
 + 修改指令IncrementPercentageRequest、IncrementPercentageConfirmation、DecrementPercentageRequest、DecrementPercentageConfirmation、SetPercentageRequest、 SetPercentageConfirmation为意义更加明确的[IncrementBrightnessPercentageRequest](#incrementbrightnesspercentagerequest)、[IncrementBrightnessPercentageConfirmation](#incrementbrightnesspercentageconfirmation)、[DecrementBrightnessPercentageRequest](#decrementbrightnesspercentagerequest)、[DecrementBrightnessPercentageConfirmation](#decrementbrightnesspercentageconfirmation)、[SetBrightnessPercentageRequest](#setbrightnesspercentagerequest)、 [SetBrightnessPercentageConfirmation](#setbrightnesspercentageconfirmation)；
