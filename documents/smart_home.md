@@ -1815,7 +1815,7 @@
 ```http
 POST /smarthome/events HTTP/1.1
 Host: aiwx.html5.qq.com
-Authorization: Basic {{base64(client_id:client_secret)}}
+Authorization: Basic {{base64(skill_id:skill_secret)}}
 Content-Type: application/json
 
 {
@@ -1827,7 +1827,7 @@ Content-Type: application/json
    "payload":{
 	  "scope": {
 		  "type": "BasicToken",
-		  "token": "{{base64(client_id:client_secret)}}",
+		  "token": "{{base64(skill_id:skill_secret)}}",
 		  "openUid": "0123456789abcdef",
 		  "skillId": "0123456789"
 	  },
@@ -1837,14 +1837,14 @@ Content-Type: application/json
 ```
 
 #### 上报事件消息校验
-技能上报的时间消息通过Basic Authorization进行校验，技能上报事件时，需要在HTTP头带上`Authorization`，以`Basic {{base64(client_id:client_secret)}}`方式进行格式化。并且在消息结构体中填充`scope`字段；
+技能上报的时间消息通过Basic Authorization进行校验，技能上报事件时，需要在HTTP头带上`Authorization`，以`Basic {{base64(skill_id:skill_secret)}}`方式进行格式化。并且在消息结构体中填充`scope`字段；
 
 ##### scope 参数说明
 
 |字段名|描述|类型|必须|
 |------|---|----|----|
 |`type`|Token的类型，目前支持`BasicToken`|string|是|
-|`token`|当类型为`BasicToken`时，先将`client_id` + ':' + `client_secret`进行拼接，再用Base64编码|string|是|
+|`token`|当类型为`BasicToken`时，先将`skill_id` + ':' + `skill_secret`进行拼接，再用Base64编码|string|是|
 |`openUid`|叮当用户的OpenId，可以从`DiscoverAppliancesRequest`中获取|string|是（`type`为`BasicToken`时)|
 |`skillId`|智能家居技能Id，可以从开放平台的技能基础信息中查到|string|是（`type`为`BasicToken`时)|
 
@@ -1915,7 +1915,7 @@ Connection: close
     "payload": {
  	  "scope": {
  		  "type": "BasicToken",
- 		  "token": "{{base64(client_id:client_secret)}}",
+ 		  "token": "{{base64(skill_id:skill_secret)}}",
  		  "openUid": "0123456789abcdef",
  		  "skillId": "0123456789"
  	  },
@@ -1983,7 +1983,7 @@ Connection: close
     "payload": {
  	  "scope": {
  		  "type": "BasicToken",
- 		  "token": "{{base64(client_id:client_secret)}}",
+ 		  "token": "{{base64(skill_id:skill_secret)}}",
  		  "openUid": "0123456789abcdef",
  		  "skillId": "0123456789"
  	  },
