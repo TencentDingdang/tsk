@@ -1,5 +1,16 @@
 # 安全签名
 
+<!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+
+- [如何校验请求的合法性](#如何校验请求的合法性)
+- [TSK-HMAC-SHA256-BASIC签名方法](#tsk-hmac-sha256-basic签名方法)
+	- [Task 1: 拼接请求数据和时间戳得到`SigningContent`](#task-1-拼接请求数据和时间戳得到signingcontent)
+	- [Task 2: 获取`Signature`签名](#task-2-获取signature签名)
+	- [Task 3: 在请求中带上签名信息](#task-3-在请求中带上签名信息)
+	- [算法实现示例](#算法实现示例)
+
+<!-- /TOC -->
+
 ## 如何校验请求的合法性
 由于技能服务是公网可访问的，为了保护技能不被其他人攻击，技能服务应当验证请求的合法性，拒绝未签名或签名不合法的请求。验证请求合法性的大致流程如下：
 1. 校验签名的合法性，使用[签名算法](#TSK-HMAC-SHA256-BASIC签名方法)对请求内容进行签名，并与请求头的`Authorization`进行比对，若发现请求不一致则为非法请求；

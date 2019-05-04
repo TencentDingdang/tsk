@@ -6,6 +6,26 @@
 + 按照协议定义返回响应内容；
 
 这里我们将详细介绍几个重要的流程的处理细节，并给出示例。
+
+<!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+
+- [多轮会话过程中发起参数询问流程](#多轮会话过程中发起参数询问流程)
+	- [Round1请求示例](#round1请求示例)
+	- [Round1技能响应示例](#round1技能响应示例)
+	- [Round2请求示例](#round2请求示例)
+	- [Round2技能响应示例](#round2技能响应示例)
+- [在有屏设备上展示图形界面](#在有屏设备上展示图形界面)
+	- [RenderTemplate响应示例](#rendertemplate响应示例)
+- [了解如何使用账号连接](#了解如何使用账号连接)
+	- [LinkAccount卡片响应示例](#linkaccount卡片响应示例)
+- [发起付费流程](#发起付费流程)
+	- [Round1请求示例](#round1请求示例)
+	- [Round1技能响应示例](#round1技能响应示例)
+	- [Round2请求示例](#round2请求示例)
+	- [Round2技能响应示例](#round2技能响应示例)
+
+<!-- /TOC -->
+
 ## 多轮会话过程中发起参数询问流程
 技能在于用户交互过程中，可以通过设置`shouldEndSession`为`false`来保持会话，并且能够让终端自动打开麦克风跟用户进行连续的对话。对于在对话过程中需要收集更多槽位的技能，可以返回`Dialog.ElicitSlot`指令并且将`shouldEndSession`设置为`false`来收集指定的槽位。
 以打车技能为例，当用户未提供行程终点时，技能可以提问引导用户说出要去的地点：
