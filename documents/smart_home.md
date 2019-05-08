@@ -1174,7 +1174,6 @@
 | 参数                    | 参数功能     | 参数类型   | 必需   |
 | --------------------- | -------- | ------ | ---- |
 | `fanSpeed.value`      | 设置成功后的风速值 | int | 是    |
-| `fanSpeed.value` | 设置后的风速值 | int | 否    |
 | `fanSpeed.level` | 设置后的风速档位 | string | 否    |
 | `previousState.fanSpeed.value` | 设置前的风速值 | int | 否    |
 | `previousState.fanSpeed.level` | 设置前的风速档位 | string | 否    |
@@ -1261,8 +1260,7 @@
 
 | 参数                    | 参数功能     | 参数类型   | 必需   |
 | --------------------- | -------- | ------ | ---- |
-| `fanSpeed.value`      | 设置成功后的目标风速值 | int | 是    |
-| `fanSpeed.value` | 设置后的风速值 | int | 否    |
+| `fanSpeed.value`      | 设置成功后的风速值 | int | 是    |
 | `fanSpeed.level` | 设置后的风速档位 | string | 否    |
 | `previousState.fanSpeed.value` | 设置前的风速值 | int | 否    |
 | `previousState.fanSpeed.level` | 设置前的风速档位 | string | 否    |
@@ -1348,8 +1346,7 @@
 
 | 参数                    | 参数功能     | 参数类型   | 必需   |
 | --------------------- | -------- | ------ | ---- |
-| `fanSpeed.value`   | 设置成功后的目标风速值 | int | 是    |
-| `fanSpeed.value` | 设置后的风速值 | int | 否    |
+| `fanSpeed.value`   | 设置成功后的风速值 | int | 是    |
 | `fanSpeed.level` | 设置后的风速档位 | string | 否    |
 | `previousState.fanSpeed.value` | 设置前的风速值 | int | 否    |
 | `previousState.fanSpeed.level` | 设置前的风速档位 | string | 否    |
