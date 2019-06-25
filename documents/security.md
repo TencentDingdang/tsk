@@ -30,3 +30,43 @@ Authorization: [Algorithm] Datetime=[Timestamp], Signature=[Signature]
 ```http
 Authorization: TSK-HMAC-SHA256-BASIC Datetime=20170720T193559Z, Signature=d8612ab1ff0301e1016d817c02350a2b76ea62e0
 ```
+
+
+
+## TSK-RSA2签名方法
+
+TSK-RSA2签名方法为非对称加密，会用到TSKPublicKey，SkillPrivateKey， SkillPublicKey ：
+
+
+| 名词            | 描述                   | 获取方式|
+| --------------- | ---- | ---------------------- |
+| `TSKPublicKey` | TSK平台分发的验证签名公钥。 | 合作时邮件分配或开放平台分配。 |
+| `SkillPrivateKey`      | 技能开发者请求TSK平台时，签名使用的私钥。 | 技能开发者生成，并妥善保管 |
+| `SkillPublicKey` | `SkillPrivateKey`对应的公钥，需要提供给TSK平台，用于验证签名。 | 技能开发者生成，并提供给TSK平台 |
+
+以下为openssl工具生成密钥示例：
+
+```
+openssl genrsa -out private_key.pem 2048  #生成私钥
+openssl rsa -in private_key.pem -pubout -out public_key.pem #生成公钥，将public_key.pem去除begin和end标签，以及换行符，然后提供给TSK平台
+```
+
+### 签名方法
+
+TSK-RSA2签名方法和TSK-HMAC-SHA256-BASIC签名方法待签名内容拼接规则一致，但签名算法使用的是SHA256WithRSA。
+
+```
+Signature = SHA256WithRSA(SigningContent, SkillPrivateKey);
+```
+
+Signature为Base64编码，签名内容同样放置于HTTP Header的`Authorization`，`Authorization`的结构和TSK-HMAC-SHA256-BASIC签名方法保持一致：
+
+```http
+Authorization: [Algorithm] Datetime=[Timestamp], Signature=[Signature]
+```
+此处，Algorithm应填写TSK-RSA2，以下Demo展示了一个完整的`Authorization`：
+```http
+Authorization: TSK-RSA2 Datetime=20170720T193559Z, Signature=ZDg2MTJhYjFmZjAzMDFlMTAxNmQ4MTd....jMDIzNTBhMmI3NmVhNjJlMA==
+```
+
+
