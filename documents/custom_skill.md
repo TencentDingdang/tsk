@@ -363,6 +363,44 @@ LaunchRequest在用户初次进入技能并且没有明确意图的时候发送�
 | `partnerOrderId` | 商户内部的订单ID（若商户提供）               | `string` |
 | `dingdangOrderId`| 叮当平台订单ID                               | `string` |
 
++ 请求示例：
+```json
+{
+  "version": "1.0",
+  "session": {...},
+  "context": {...},
+  "request": {
+    "type": "RetryIntentRequest",
+    "requestId": "rrrrrr.....id",
+    "timestamp": "20170720T193559Z",
+    "dialogState": "string",
+    "queryText": "string",
+    "sourceIntent": {
+      "name": "string",
+      "confirmationStatus": "string",
+      "slots": {
+        "{{SlotName}}": {
+          "name": "{{SlotName}}",
+          "confirmationStatus": "string",
+          "values": [{
+            "value": {
+              "type": "text",
+              "value": "string",
+              "origin": "string"
+            }
+          }]
+        }
+      }
+    },
+    "retryMeta": {
+      "type": "PaymentMeta",
+      "partnerOrderId": "string",
+      "dingdangOrderId": "string"
+    }
+  }
+}
+```
+
 ## 响应数据格式
 
 ### HTTP Header
@@ -774,7 +812,7 @@ Dialog类型的指令主要用于对话流程的控制，比如更新会话过�
 | -------------------------- | ---------------------------------------- | -------- | ---- |
 | `type`                     | 固定值：`Payment.Pay`                     | `string` | 是    |
 | `order`                    | 订单信息                                  | `object` | 是    |
-| `order.userId`             | 用户在商户平台的用户ID，用于后续的信息回传   | `string` | 是    |
+| `order.userId`             | 用户在商户平台的用户ID，用于后续的信息回传，若不支持账号连接，需要传该字段   | `string` | 否    |
 | `order.name`               | 商品名称                                  | `string` | 是    |
 | `order.description`         | 商品描述                                  | `string` | 是    |
 | `order.items`              | 商品子类                                   | `array`  | 是    |
