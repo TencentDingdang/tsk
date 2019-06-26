@@ -417,6 +417,9 @@ Content-Type: application/json;charset=UTF-8
 ```json
 {
   "version": "string",
+  "feedbackAttributes": {
+    "key1": "string value1"
+  },
   "response": {
     "outputSpeech": {
       "type": "PlainText",
@@ -454,6 +457,7 @@ Content-Type: application/json;charset=UTF-8
 | `directives`        | 指令列表，支持的类型有：<br>+ AudioPlayer 类型的指令<br>+ VideoPlayer 类型的指令<br>+ Display 类型的指令<br>+ Dialog 类型的指令<br>+ Payment 类型的指令 | `array`   | 否                       |
 | `card`              | 卡片数据，可以在需要用户登陆时弹出账号连接卡片，卡片可能被发送到有屏设备或者手机APP上 | `object` | 否 |
 | `card.type`         | 卡片类型，目前支持：<br> + `LinkAccount`: 账号连接卡片，关于账号连接见[文档说明](./account_linking.md) | 否 |
+| `feedbackAttributes` | 设备厂商自建技能专用，用于从自建技能将数据透传给终端，需要保证请求的设备和技能在同一项目下，该字段数据大小需限制在1K以下 | `map` | 否 |
 
 ### AudioPlayer类型的指令
 该类型的指令用于指示腾讯叮当终端执行音频播控相关的操作。
