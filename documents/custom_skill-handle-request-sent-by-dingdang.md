@@ -246,15 +246,15 @@
 ```
 
 ## 发起付费流程
-若技能登记开启了付费功能，可以在响应中返回`Payment.Pay`指令发起一次付费请求，若用户使用有屏设备则会在有屏设备上展示付费二维码和商品信息。
+若技能登记开启了付费功能，可以在响应中返回`Connections.SendRequest.Charge`指令发起一次付费请求，若用户使用有屏设备则会在有屏设备上展示付费二维码和商品信息。
 以阅文听书为例，用户进行了账号连接之后，发给技能的请求会带上`accessToken`，技能可以根据该信息获取到用户是否购买当前资源的信息，若未购买则发起付费请求。
 
 
 > **用户**：叮当叮当，播放万古神帝第35集  
->   *Roud1: 技能返回`Connections.SendRequest.Charge`指令，设置`shouldEndSession`为`true`*  
+>   *Roud1: 技能返回[`Connections.SendRequest.Charge`指令](./custom_skill.md#connectionssendrequest类型的指令)，设置`shouldEndSession`为`true`*  
 > **叮当**：这是付费内容，需要购买才能播放哦  
 > **用户**：(手机微信扫描二维码付费)  
->  *Round2: 付费成功后技能收到`Connections.Response.Charge`事件，并带上订单的信息*  
+>  *Round2: 付费成功后技能收到[`Connections.Response.Charge`事件](./custom_skill.md#connectionsresponsecharge-扣款事件参数说明)，并带上订单的信息*  
 > **叮当**：现在就为你播放万古神帝第35集  
 
 ### Round1请求示例
