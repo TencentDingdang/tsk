@@ -458,7 +458,7 @@ Content-Type: application/json;charset=UTF-8
           }
         }
       },
-      "paymentRequired": false
+      "pay": false
     }
   ]
 }
@@ -477,7 +477,7 @@ Content-Type: application/json;charset=UTF-8
 | `playlist[].info.title`    | 音频的标题                                   | `string` | 是    |
 | `playlist[].info.subtitle` | 音频的副标题，建议是音乐类别或歌手姓名          | `string` | 否    |
 | `playlist[].info.art`      | 音频的封面图片信息，见[Image Object](#image-object-参数说明) | `object` | 否    |
-| `playlist[].paymentRequired`| 音频是否需要付费，默认为`false`：`true`表示该音频未购买，需要购买才能后才能收听（`playlist[].stream.url`需要同时设置为空）；`false`表示该音频已购买或者不需要付费购买 | `boolean` | 否    |
+| `playlist[].pay`           | 音频是否需要付费，默认为`false`：`true`表示该音频未购买，需要购买才能后才能收听（`playlist[].stream.url`需要同时设置为空）；`false`表示该音频已购买或者不需要付费购买 | `boolean` | 否    |
 
 
 ### VideoPlayer类型的指令
