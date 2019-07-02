@@ -251,10 +251,10 @@
 
 
 > **用户**：叮当叮当，播放万古神帝第35集  
->   *Roud1: 技能返回`Payment.Pay`指令，设置`shouldEndSession`为`true`*  
+>   *Roud1: 技能返回`Connections.SendRequest.Charge`指令，设置`shouldEndSession`为`true`*  
 > **叮当**：这是付费内容，需要购买才能播放哦  
 > **用户**：(手机微信扫描二维码付费)  
->  *Round2: 付费成功后技能收到`RetryIntentRequest`，并且`retryMeta`中有该笔订单的信息*  
+>  *Round2: 付费成功后技能收到`Connections.Response.Charge`事件，并带上订单的信息*  
 > **叮当**：现在就为你播放万古神帝第35集  
 
 ### Round1请求示例
@@ -334,18 +334,21 @@
     },
     "directives": [
       {
-        "type": "Payment.Pay",
-        "order": {
-            "name": "万古神帝",
-            "description": "请购买后继续播放",
-            "userId": "user-id-of-yuewen",
-            "items": [{
-                "itemId": "id-of-current-goods",
-                "itemName": "万古神帝-35集",
-                "price": 200,
-                "totalFee": 200,
-                "count": 1
-            }]
+        "type": "Connections.SendRequest",
+        "name": "Charge",
+        "payload": {
+            "chargeInfo": {
+                "name": "万古神帝",
+                "description": "请购买后点播",
+                "userId": "user-id-of-yuewen",
+                "items": [{
+                    "itemId": "id-of-current-goods",
+                    "itemName": "万古神帝-35集",
+                    "price": 200,
+                    "totalFee": 200,
+                    "count": 1
+                }]
+            }
         }
       }
     ],
@@ -385,43 +388,13 @@
     }
   },
   "request": {
-    "type": "IntentRequest",
+    "type": "Connections.Response",
+    "name": "Charge",
     "requestId": "sample-Payment-session-round2",
     "timestamp": "20190520T193605Z",
-    "dialogState": "IN_PROGRESS",
-    "queryText": "播放万古神帝第35集",
-    "sourceIntent": {
-      "name": "play",
-      "confirmationStatus": "NONE",
-      "slots": {
-        "album": {
-          "name": "album",
-          "confirmationStatus": "NONE",
-          "values": [{
-            "value": {
-              "type": "text",
-              "value": "万古神帝",
-              "origin": "万古神帝"
-            }
-          }]
-        },
-        "index": {
-          "name": "index",
-          "confirmationStatus": "NONE",
-          "values": [{
-            "value": {
-              "type": "text",
-              "value": "35",
-              "origin": "35"
-            }
-          }]
-        }
-      }
-    },
-    "retryMeta": {
-      "type": "PaymentMeta",
-      "partnerOrderId": "order-id-generated-by-yuewen",
-      "dingdangOrderId": "order-id-generated-by-dingdang"
+    "payload": {
+      "dingdangOrderId": "order-id-generated-by-yuewen",
+      "partnerOrderId": "order-id-generated-by-dingdang"
     }
   }
 }

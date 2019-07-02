@@ -34,8 +34,7 @@
 		- [Interval Datetime value](#interval-datetime-value)
 		- [Repeat Datetime value](#repeat-datetime-value)
 		- [SessionEndedRequest 参数说明](#sessionendedrequest-参数说明)
-		- [RetryIntentRequest 参数说明](#retryintentrequest-参数说明)
-		- [RetryMeta](#retrymeta)
+		- [Connections.Response.Charge 扣款事件参数说明](#connectionsresponsecharge-扣款事件参数说明)
 - [响应数据格式](#响应数据格式)
 	- [HTTP Header](#http-header)
 	- [HTTP Body](#http-body)
@@ -56,8 +55,8 @@
 			- [Audio Object 参数说明](#audio-object-参数说明)
 	- [Dialog 类型的指令](#dialog-类型的指令)
 		- [Dialog.ElicitSlot指令](#dialogelicitslot指令)
-	- [Payment类型的指令](#payment类型的指令)
-		- [Payment.Pay指令](#paymentpay指令)
+	- [Connections.SendRequest类型的指令](#connectionssendrequest类型的指令)
+		- [Charge支付指令](#charge支付指令)
 - [更新日志](#更新日志)
 	- [2018/11/22 更新](#20181122-更新)
 	- [2018/12/26 更新](#20181226-更新)
@@ -339,67 +338,19 @@ LaunchRequest在用户初次进入技能并且没有明确意图的时候发送�
 | `error.type`    | 错误类型，包括：<br>` INVALID_RESPONSE`：技能响应有问题<br>` INTERNAL_ERROR`：叮当内部错误 | `string` |
 | `error.message` | 错误信息说明                                   | `string` |
 
-#### RetryIntentRequest 参数说明
-由于技能需用户进行授权、支付等原因造成的对话流程中断，在用户授权完成、支付完成后会发起重试，这时技能可以对用户的原意图提供最终的服务。
+#### Connections.Response.Charge 扣款事件参数说明
+由于技能可以通过`Connections.SendRequest.Charge`指令发起支付，在支付完成后会向技能发起该事件告知技能支付结果，此时技能可以返回内容继续为用户提供后续服务。
 
 | 参数              | 描述                                       | 类型       |
 | --------------- | ------------------------------------------- | -------- |
-| `type`          | 固定为`RetryIntentRequest`                   | `string` |
+| `type`          | 固定为`Connections.Response`                | `string` |
+| `name`          | 当前支持：`Charge`：支付结束                  | `string` |
 | `requestId`     | 当前请求的ID，用于唯一标识一次请求             | `string` |
 | `timestamp`     | 用户请求时间戳，ISO 8601格式的UTC+0时间        | `string` |
-| ` dialogState` | 用于表示多轮对话状态的枚举值，包括：` STARTED`：会话开始；<br>` IN_PROGRESS`：会话进行中；<br>` COMPLETED`：会话结束，只有在使用了`Dialog.Delegate`之后才能收到该类型的请求； | `string` |
-| `queryText`    | 用户的说话内容                               | `string` |
-| `sourceIntent`  | 用户原意图，开发者可根据意图继续响应用户的请求，详细信息见[Intent Object](#intent-object-参数说明) | `object` |
-| `retryMeta`     | 重试请求的一些关键信息，比如原支付指令的订单号，有：<br>`PaymentMeta`：支付指令的信息，详见[RetryMeta](#retrymeta)；    | `object` |
+| `payload.dingdangOrderId` | 叮当此次交易生成的订单ID            | `string` |
+| `payload.partnerOrderId`  | 商户生成的订单ID                   | `string` |
 
-注意：对该请求的响应内容不能包含`Dialog`类型的指令。
-
-#### RetryMeta
-目前只支持[支付](#payment支付指令)指令信息的回传。
-
-| 参数              | 描述                                       | 类型      |
-| ---------------  | ------------------------------------------- | -------- |
-| `type`           | 固定为`PaymentMeta`                          | `string` |
-| `partnerOrderId` | 商户内部的订单ID（若商户提供）               | `string` |
-| `dingdangOrderId`| 叮当平台订单ID                               | `string` |
-
-+ 请求示例：
-```json
-{
-  "version": "1.0",
-  "session": {...},
-  "context": {...},
-  "request": {
-    "type": "RetryIntentRequest",
-    "requestId": "rrrrrr.....id",
-    "timestamp": "20170720T193559Z",
-    "dialogState": "string",
-    "queryText": "string",
-    "sourceIntent": {
-      "name": "string",
-      "confirmationStatus": "string",
-      "slots": {
-        "{{SlotName}}": {
-          "name": "{{SlotName}}",
-          "confirmationStatus": "string",
-          "values": [{
-            "value": {
-              "type": "text",
-              "value": "string",
-              "origin": "string"
-            }
-          }]
-        }
-      }
-    },
-    "retryMeta": {
-      "type": "PaymentMeta",
-      "partnerOrderId": "string",
-      "dingdangOrderId": "string"
-    }
-  }
-}
-```
+注意：对该事件的响应内容不能包含`Dialog`类型的指令，且`shouldEndSession`会置为`true`。
 
 ## 响应数据格式
 
@@ -454,7 +405,7 @@ Content-Type: application/json;charset=UTF-8
 | `outputSpeech.type` | 当前只支持`PlainText`                        | `string`  | 是                       |
 | `outputSpeech.text` | 回答用户的语音内容                            | `string`  | 是（当`type`为`PlainText`时） |
 | `shouldEndSession`  | 用于通知腾讯叮当是否结束当前会话，该字段不存在时使用默认值`true`：<br>+ `true`表示结束当前会话；<br>+ `false`表示会话继续，一般情况下返回`false`终端会自动打开麦克风收音；       | `boolean` | 否                       |
-| `directives`        | 指令列表，支持的类型有：<br>+ AudioPlayer 类型的指令<br>+ VideoPlayer 类型的指令<br>+ Display 类型的指令<br>+ Dialog 类型的指令<br>+ Payment 类型的指令 | `array`   | 否                       |
+| `directives`        | 指令列表，支持的类型有：<br>+ AudioPlayer 类型的指令<br>+ VideoPlayer 类型的指令<br>+ Display 类型的指令<br>+ Dialog 类型的指令<br>+ Connections.SendRequest.Charge 类型的指令 | `array`   | 否                       |
 | `card`              | 卡片数据，可以在需要用户登陆时弹出账号连接卡片，卡片可能被发送到有屏设备或者手机APP上 | `object` | 否 |
 | `card.type`         | 卡片类型，目前支持：<br> + `LinkAccount`: 账号连接卡片，关于账号连接见[文档说明](./account_linking.md) | 否 |
 | `feedbackAttributes` | 设备厂商自建技能专用，用于从自建技能将数据透传给终端，需要保证请求的设备和技能在同一项目下，该字段数据大小需限制在1K以下 | `map` | 否 |
@@ -786,26 +737,30 @@ Dialog类型的指令主要用于对话流程的控制，比如更新会话过�
 | `updatedIntent` | 意图结构体，技能服务可以通过改变结构体的参数值或确认状态，详细信息见[Intent Object](#intent-object-参数说明) | `object` | 否    |
 
 
-### Payment类型的指令
+### Connections.SendRequest类型的指令
+
+#### Charge支付指令
 支付指令主要用于在语音交互中向终端发起支付请求，以便让用户完成支付，更多关于订单创建、订单查询、退款等支付相关的接口请查阅[支付说明文档](./pay.md)。
-#### Payment.Pay指令
 
 + 消息样例
 
 ```json
 {
-  "type": "Payment.Pay",
-  "order": {
-      "name": "string",
-      "description": "string",
-      "userId": "string",
-      "items": [{
-          "itemId": "string",
-          "itemName": "string",
-          "price": 10,
-          "totalFee": 100,
-          "count": 10
-      }]
+  "type": "Connections.SendRequest",
+  "name": "Charge",
+  "payload": {
+      "chargeInfo": {
+          "name": "string",
+          "description": "string",
+          "userId": "string",
+          "items": [{
+              "itemId": "string",
+              "itemName": "string",
+              "price": 10,
+              "totalFee": 100,
+              "count": 10
+          }]
+      }
   }
 }
 ```
@@ -814,17 +769,18 @@ Dialog类型的指令主要用于对话流程的控制，比如更新会话过�
 
 | 参数                         | 描述                                       | 类型       | 必需   |
 | -------------------------- | ---------------------------------------- | -------- | ---- |
-| `type`                     | 固定值：`Payment.Pay`                     | `string` | 是    |
-| `order`                    | 订单信息                                  | `object` | 是    |
-| `order.userId`             | 用户在商户平台的用户ID，用于后续的信息回传，若不支持账号连接，需要传该字段   | `string` | 否    |
-| `order.name`               | 商品名称                                  | `string` | 是    |
-| `order.description`         | 商品描述                                  | `string` | 是    |
-| `order.items`              | 商品子类                                   | `array`  | 是    |
-| `order.items[].itemId`     | 商品子类ID                                 | `string`    | 是    |
-| `order.items[].itemName`   | 商品子类名称                               | `string`    | 是    |
-| `order.items[].totalFee`   | 总金额，单位为分                           | `int`    | 是    |
-| `order.items[].price`      | 商品单价，单位为分                         | `int`    | 是    |
-| `order.items[].count`      | 商品数量                                  | `int`    | 是    |
+| `type`                     | 固定值：`Connections.SendRequest`         | `string` | 是    |
+| `name`                     | 固定为`Charge`，表示支付指令               | `string` | 是    |
+| `payload.chargeInfo`                    | 收费信息                                  | `object` | 是    |
+| `payload.chargeInfo.userId`             | 用户在商户平台的用户ID，用于后续的信息回传，若不支持账号连接，需要传该字段   | `string` | 否    |
+| `payload.chargeInfo.name`               | 收费名称                                  | `string` | 是    |
+| `payload.chargeInfo.description`        | 收费描述                                  | `string` | 否    |
+| `payload.chargeInfo.items`              | 商品子类                                  | `array`  | 是    |
+| `payload.chargeInfo.items[].itemId`     | 商品ID                                    | `string` | 是    |
+| `payload.chargeInfo.items[].itemName`   | 商品名称                                  | `string` | 是    |
+| `payload.chargeInfo.items[].totalFee`   | 总金额，单位为分                           | `int`    | 是    |
+| `payload.chargeInfo.items[].price`      | 商品单价，单位为分                         | `int`    | 是    |
+| `payload.chargeInfo.items[].count`      | 商品数量                                  | `int`    | 是    |
 
 
 ## 更新日志
