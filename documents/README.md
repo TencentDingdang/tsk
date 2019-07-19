@@ -14,6 +14,8 @@
 6. 智能家居技能
     + [技能协议](./smart_home.md)
     + [Alexa兼容方案](./alexa-smart-home-compatible.md)
+7. 智能问答技能
+    + [技能协议](./qa_pairs.md)
 7. [安全签名](./security.md)
 8. [支付能力](./pay.md)
 9. [账号连接](./account_linking.md)
