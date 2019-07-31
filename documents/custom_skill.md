@@ -217,14 +217,15 @@ LaunchRequest在用户初次进入技能并且没有明确意图的时候发送�
 
 | 参数                                   | 描述                                       | 类型       |
 | ------------------------------------ | ---------------------------------------- | -------- |
-| `name`                               | 意图名                                      | `string` |
+| `name`                               | 意图标识                                     | `string` |
 | `confirmationStatus`                 | 当前意图的确认状态，可选值有：<br>+ `NONE`：未确认；<br>+ `CONFIRMED`：已确认；<br>+ `DENIED`：拒绝 | `string` |
 | `slots`                              | 槽位信息                                     | `object`    |
-| `slots.slotName.name`                | 参数名                                      | `string` |
-| `slots.slotName.confirmationStatus`  | 当前参数的确认状态，可选值有：<br>+ `NONE`：未确认；<br>+ `CONFIRMED`：已确认；<br>+ `DENIED`：拒绝 | `string` |
-| `slots.slotName.values`              | 该参数对应的值列表                                | `array`  |
-| `slots.slotName.values[].value`      | 参数的值                                     | `object` |
-| `slots.slotName.values[].value.type` | 参数值类型，可选值有：<br>`text`：普通文本类型；<br>`unit`：度量单位类型；<br>`address`：地址类型；<br>`datetime`：时间类型； | `string` |
+| `slots.{{SlotName}}`                   | `{{SlotName}}`是占位符，会被替换成实际在技能中定义的槽位标识   | `object`    |
+| `slots.{{SlotName}}.name`                | 参数名（或者叫槽位名）                        | `string` |
+| `slots.{{SlotName}}.confirmationStatus`  | 当前参数的确认状态，可选值有：<br>+ `NONE`：未确认；<br>+ `CONFIRMED`：已确认；<br>+ `DENIED`：拒绝 | `string` |
+| `slots.{{SlotName}}.values`              | 该参数对应的值列表                                | `array`  |
+| `slots.{{SlotName}}.values[].value`      | 参数的值                                     | `object` |
+| `slots.{{SlotName}}.values[].value.type` | 参数值类型，可选值有：<br>`text`：普通文本类型；<br>`unit`：度量单位类型；<br>`address`：地址类型；<br>`datetime`：时间类型； | `string` |
 
 #### Text Slot
 文本类型槽位，也是最常用的槽位类型，**所有的自定义实体、大部分的系统实体都会以该类型进行表示**。
@@ -411,6 +412,7 @@ Content-Type: application/json;charset=UTF-8
 | ---------- | ---------------------------------------- | -------- | ---- |
 | `version`  | 协议的版本标识，当前版本为`1.0`                       | `string` | 是    |
 | `response` | 技能响应内容以及是否结束当前会话状态，详细说明见[Response Object](#response-object-参数说明) | `object` | 是    |
+| `feedbackAttributes` | 设备厂商自建技能专用，用于从自建技能将数据透传给终端，需要保证请求的设备和技能在同一项目下，该字段数据大小需限制在1K以下 | `map` | 否 |
 
 ### Response Object 参数说明
 
@@ -423,7 +425,6 @@ Content-Type: application/json;charset=UTF-8
 | `directives`        | 指令列表，支持的类型有：<br>+ AudioPlayer 类型的指令<br>+ VideoPlayer 类型的指令<br>+ Display 类型的指令<br>+ Dialog 类型的指令<br>+ Connections.SendRequest.Charge 类型的指令 | `array`   | 否                       |
 | `card`              | 卡片数据，可以在需要用户登陆时弹出账号连接卡片，卡片可能被发送到有屏设备或者手机APP上 | `object` | 否 |
 | `card.type`         | 卡片类型，目前支持：<br> + `LinkAccount`: 账号连接卡片，关于账号连接见[文档说明](./account_linking.md) | 否 |
-| `feedbackAttributes` | 设备厂商自建技能专用，用于从自建技能将数据透传给终端，需要保证请求的设备和技能在同一项目下，该字段数据大小需限制在1K以下 | `map` | 否 |
 
 ### AudioPlayer类型的指令
 该类型的指令用于指示腾讯叮当终端执行音频播控相关的操作。
