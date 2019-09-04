@@ -2,8 +2,8 @@
 
 > 文档更新于2018/12/29，点击查看[更新日志](#更新日志)。
 
-自定义技能一般用于满足用户特定的需求，比如：天气技能用于满足用户天气查询的需求，当用户说“叮当叮当，深圳今天天气怎样”，天气技能根据解析出来的参数查询深圳当天的天气，并组织成文本回复语交给腾讯叮当利用语音合成技术（TTS，Text-To-Speech）播报给用户。交互流程大致如下图：
-![](./pic/custome-skill-interaction-flow.png)
+自定义技能一般用于通过设计对话的场景和交互流程，并最终通过来满足用户特定的需求，比如：天气技能用于满足用户天气查询的需求，当用户说“叮当叮当，深圳今天天气怎样”，天气技能根据解析出来的参数查询深圳当天的天气，并组织成文本回复语交给腾讯云叮当，腾讯云叮当利用语音合成技术（TTS，Text-To-Speech）将回复语播报给用户。交互流程大致如下图：
+![](./pic/custom-skill-interaction-flow.png)
 详细流程描述为：
 1. 用户对腾讯叮当终端说“叮当叮当，深圳今天天气怎样”；
 2. 腾讯叮当语音识别服务将用户音频转化为文本“深圳今天天气怎样”；
@@ -11,7 +11,7 @@
 4. “天气”技能根据意图、槽位确定要执行查询深圳当天天气的任务，并将结果组织成自然语言返回给腾讯叮当；
 5. 腾讯叮当语音合成服务将技能给出的播报文本合成语音播报给用户：“深圳今天阴转小雨，出门记得带伞”。
 
-搭建自定义技能大体分两部分工作，一部分是意图设计，另一部分是服务开发，以下内容主要介绍服务开发部分技能服务需要支持的协议。
+创建自定义技能大体分两部分工作，一部分是意图设计，另一部分是服务开发，以下内容主要介绍服务开发部分技能服务需要支持的协议。
 
 <!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
@@ -34,8 +34,7 @@
 		- [Interval Datetime value](#interval-datetime-value)
 		- [Repeat Datetime value](#repeat-datetime-value)
 		- [SessionEndedRequest 参数说明](#sessionendedrequest-参数说明)
-		- [RetryIntentRequest 参数说明](#retryintentrequest-参数说明)
-		- [RetryMeta](#retrymeta)
+		- [Connections.Response.Charge 扣款事件参数说明](#connectionsresponsecharge-扣款事件参数说明)
 - [响应数据格式](#响应数据格式)
 	- [HTTP Header](#http-header)
 	- [HTTP Body](#http-body)
@@ -56,8 +55,8 @@
 			- [Audio Object 参数说明](#audio-object-参数说明)
 	- [Dialog 类型的指令](#dialog-类型的指令)
 		- [Dialog.ElicitSlot指令](#dialogelicitslot指令)
-	- [Payment类型的指令](#payment类型的指令)
-		- [Payment.Pay指令](#paymentpay指令)
+	- [Connections.SendRequest类型的指令](#connectionssendrequest类型的指令)
+		- [Charge支付指令](#charge支付指令)
 - [更新日志](#更新日志)
 	- [2018/11/22 更新](#20181122-更新)
 	- [2018/12/26 更新](#20181226-更新)
@@ -187,12 +186,12 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 #### LaunchRequest 参数说明
 LaunchRequest在用户初次进入技能并且没有明确意图的时候发送给技能，比如：
 
-> **用户**：叮当叮当，打开QQ音乐
->   *叮当发送`LaunchRequest`到技能*
->   *技能可以给出欢迎语，并播放热门歌曲*
-> **叮当**：欢迎使用QQ音乐，最动听的音乐送给我最喜欢的你。
->   *技能也可以给出欢迎语，并询问用户想听什么歌*
-> **叮当**：欢迎使用QQ音乐，请问你想听什么歌？
+> **用户**：叮当叮当，打开QQ音乐  
+>   *叮当发送`LaunchRequest`到技能*  
+>   *技能可以给出欢迎语，并播放热门歌曲*  
+> **叮当**：欢迎使用QQ音乐，最动听的音乐送给我最喜欢的你。  
+>   *技能也可以给出欢迎语，并询问用户想听什么歌*  
+> **叮当**：欢迎使用QQ音乐，请问你想听什么歌？  
 
 
 | 参数          | 描述                         | 类型       |
@@ -200,7 +199,7 @@ LaunchRequest在用户初次进入技能并且没有明确意图的时候发送�
 | `type`      | 固定为`LaunchRequest`         | `string` |
 | `requestId` | 当前请求的ID，用于唯一标识一次请求         | `string` |
 | `timestamp` | 用户请求时间戳，ISO 8601格式的UTC+0时间 | `string` |
-| `queryText` | 用户的Query                              | `string` |
+| `queryText` | 用户的说话内容                         | `string` |
 
 #### IntentRequest 参数说明
 当用户有明确的意图时，腾讯叮当将发送`IntentRequest`到技能，并指明当前意图和提取出的槽位。
@@ -211,21 +210,22 @@ LaunchRequest在用户初次进入技能并且没有明确意图的时候发送�
 | `requestId`    | 当前请求的ID，用于唯一标识一次请求                       | `string` |
 | `timestamp`    | 用户请求时间戳，ISO 8601格式的UTC+0时间               | `string` |
 | ` dialogState` | 用于表示多轮对话状态的枚举值，包括：` STARTED`：会话开始；<br>` IN_PROGRESS`：会话进行中；<br>` COMPLETED`：会话结束； | `string` |
-| `queryText`    | 用户的Query                                 | `string` |
+| `queryText`    | 用户的说话内容                             | `string` |
 | `intent`       | 用户的意图信息，包含意图名称及提取的参数信息，详细说明见[intent](#intent-object-参数说明) | `object` |
 
 #### Intent Object 参数说明
 
 | 参数                                   | 描述                                       | 类型       |
 | ------------------------------------ | ---------------------------------------- | -------- |
-| `name`                               | 意图名                                      | `string` |
+| `name`                               | 意图标识                                     | `string` |
 | `confirmationStatus`                 | 当前意图的确认状态，可选值有：<br>+ `NONE`：未确认；<br>+ `CONFIRMED`：已确认；<br>+ `DENIED`：拒绝 | `string` |
 | `slots`                              | 槽位信息                                     | `object`    |
-| `slots.slotName.name`                | 参数名                                      | `string` |
-| `slots.slotName.confirmationStatus`  | 当前参数的确认状态，可选值有：<br>+ `NONE`：未确认；<br>+ `CONFIRMED`：已确认；<br>+ `DENIED`：拒绝 | `string` |
-| `slots.slotName.values`              | 该参数对应的值列表                                | `array`  |
-| `slots.slotName.values[].value`      | 参数的值                                     | `object` |
-| `slots.slotName.values[].value.type` | 参数值类型，可选值有：<br>`text`：普通文本类型；<br>`unit`：度量单位类型；<br>`address`：地址类型；<br>`datetime`：时间类型； | `string` |
+| `slots.{{SlotName}}`                   | `{{SlotName}}`是占位符，会被替换成实际在技能中定义的槽位标识   | `object`    |
+| `slots.{{SlotName}}.name`                | 参数名（或者叫槽位名）                        | `string` |
+| `slots.{{SlotName}}.confirmationStatus`  | 当前参数的确认状态，可选值有：<br>+ `NONE`：未确认；<br>+ `CONFIRMED`：已确认；<br>+ `DENIED`：拒绝 | `string` |
+| `slots.{{SlotName}}.values`              | 该参数对应的值列表                                | `array`  |
+| `slots.{{SlotName}}.values[].value`      | 参数的值                                     | `object` |
+| `slots.{{SlotName}}.values[].value.type` | 参数值类型，可选值有：<br>`text`：普通文本类型；<br>`unit`：度量单位类型；<br>`address`：地址类型；<br>`datetime`：时间类型； | `string` |
 
 #### Text Slot
 文本类型槽位，也是最常用的槽位类型，**所有的自定义实体、大部分的系统实体都会以该类型进行表示**。
@@ -323,10 +323,10 @@ LaunchRequest在用户初次进入技能并且没有明确意图的时候发送�
 
 示例场景如下：
 
-> **用户**：叮当叮当，退出QQ音乐
+> **用户**：叮当叮当，退出QQ音乐  
 >   *叮当发送`SessionEndRequest`到技能*
->   *技能可以给出退出回复语*
-> **叮当**：再见，QQ音乐期待下次与你相遇
+>   *技能可以给出退出回复语*  
+> **叮当**：再见，QQ音乐期待下次与你相遇  
 
 
 | 参数              | 描述                                       | 类型       |
@@ -339,29 +339,34 @@ LaunchRequest在用户初次进入技能并且没有明确意图的时候发送�
 | `error.type`    | 错误类型，包括：<br>` INVALID_RESPONSE`：技能响应有问题<br>` INTERNAL_ERROR`：叮当内部错误 | `string` |
 | `error.message` | 错误信息说明                                   | `string` |
 
-#### RetryIntentRequest 参数说明
-由于技能需用户进行授权、支付等原因造成的对话流程中断，在用户授权完成、支付完成后会发起重试，这时技能可以对用户的原意图提供最终的服务。
+#### Connections.Response.Charge 扣款事件参数说明
+由于技能可以通过`Connections.SendRequest.Charge`指令发起支付，在支付完成后会向技能发起该事件告知技能支付结果，此时技能可以返回内容继续为用户提供后续服务。
 
 | 参数              | 描述                                       | 类型       |
 | --------------- | ------------------------------------------- | -------- |
-| `type`          | 固定为`RetryIntentRequest`                   | `string` |
+| `type`          | 固定为`Connections.Response`                | `string` |
+| `name`          | 当前支持：`Charge`：支付结束                  | `string` |
 | `requestId`     | 当前请求的ID，用于唯一标识一次请求             | `string` |
 | `timestamp`     | 用户请求时间戳，ISO 8601格式的UTC+0时间        | `string` |
-| ` dialogState` | 用于表示多轮对话状态的枚举值，包括：` STARTED`：会话开始；<br>` IN_PROGRESS`：会话进行中；<br>` COMPLETED`：会话结束，只有在使用了`Dialog.Delegate`之后才能收到该类型的请求； | `string` |
-| `queryText`    | 用户的Query                                 | `string` |
-| `sourceIntent`  | 用户原意图，开发者可根据意图继续响应用户的请求，详细信息见[Intent Object](#intent-object-参数说明) | `object` |
-| `retryMeta`     | 重试请求的一些关键信息，比如原支付指令的订单号，有：<br>`PaymentMeta`：支付指令的信息，详见[RetryMeta](#retrymeta)；    | `object` |
+| `payload.dingdangOrderId` | 叮当此次交易生成的订单ID            | `string` |
+| `payload.partnerOrderId`  | 商户生成的订单ID                   | `string` |
 
-注意：对该请求的响应内容不能包含`Dialog`类型的指令。
+注意：对该事件的响应内容不能包含`Dialog`类型的指令，且`shouldEndSession`会置为`true`。
 
-#### RetryMeta
-目前只支持[支付](#payment支付指令)指令信息的回传。
+#### Display.ElementSelected 参数说明
+这类请求目前只在即将播放付费音频时才会发送到技能（付费音频可在[AudioPlayer.Play](#audioplayerplay指令)指令中设置音频为付费），触发该事件的方式有：
+1. 在播放完前一个音频时，自动切换到当前音频时平台发现当前音频需要付费，平台**模拟**触发该事件；
+2. 用户通过点击上一首/下一首按钮时，切换到当前音频时平台发现当前音频需要付费，平台**模拟**触发该事件；
+3. 用户通过点击播放列表中的音频，平台发现音频需要付费，平台触发事件；
+4. 用户通过语音选择当前音频时，平台发现音频需要付费，平台触发事件；
 
-| 参数              | 描述                                       | 类型      |
-| ---------------  | ------------------------------------------- | -------- |
-| `type`           | 固定为`PaymentMeta`                          | `string` |
-| `partnerOrderId` | 商户内部的订单ID（若商户提供）               | `string` |
-| `dingdangOrderId`| 叮当平台订单ID                               | `string` |
+| 参数              | 描述                                       | 类型     |
+| --------------- | ------------------------------------------- | -------- |
+| `type`          | 固定为`Display.ElementSelected`              | `string` |
+| `requestId`     | 当前请求的ID，用于唯一标识一次请求             | `string` |
+| `timestamp`     | 用户请求时间戳，ISO 8601格式的UTC+0时间        | `string` |
+| `token`         | 当前被选中的Item的`token`，在音频被选中的场景为`playlist.stream.token`字段  | `string` |
+
 
 ## 响应数据格式
 
@@ -374,11 +379,14 @@ Content-Type: application/json;charset=UTF-8
 
 ### HTTP Body
 
-请求数据将以JSON格式发送到技能所在的服务地址上，以下是一个正常的叮当请求的例子：
+响应数据是技能服务收到叮当请求后的返回，用于朗读TTS或者播放音视频、展示图形界面等，以下是一个技能响应数据的例子：
 
 ```json
 {
   "version": "string",
+  "feedbackAttributes": {
+    "key1": "string value1"
+  },
   "response": {
     "outputSpeech": {
       "type": "PlainText",
@@ -404,19 +412,20 @@ Content-Type: application/json;charset=UTF-8
 | ---------- | ---------------------------------------- | -------- | ---- |
 | `version`  | 协议的版本标识，当前版本为`1.0`                       | `string` | 是    |
 | `response` | 技能响应内容以及是否结束当前会话状态，详细说明见[Response Object](#response-object-参数说明) | `object` | 是    |
+| `feedbackAttributes` | 设备厂商自建技能专用，用于从自建技能将数据透传给终端，需要保证请求的设备和技能在同一项目下，该字段数据大小需限制在1K以下 | `map` | 否 |
 
 ### Response Object 参数说明
 
 | 参数                  | 描述                                       | 类型        | 必需                      |
 | ------------------- | ---------------------------------------- | --------- | ----------------------- |
-| `outputSpeech`      | 回答用户的语音内容                                | `object`  | 是                       |
+| `outputSpeech`      | 回答用户的语音内容，将以TTS技术朗读出来         | `object`  | 是                       |
 | `outputSpeech.type` | 可选的取值有：<br>+ `PlainText`：普通文本；<br>+ `ssml`：语音合成标记语言格式； | `string`  | 是                       |
 | `outputSpeech.text` | 回答用户的语音内容                                | `string`  | 是（当`type`为`PlainText`时） |
 | `outputSpeech.ssml` | 语音合成标记语言格式的内容，目前只支持`audio`标签，并且只能                         | `string`  | 是（当`type`为`SSML`时） |
-| `shouldEndSession`  | 用于通知腾讯叮当是否结束当前会话                         | `boolean` | 否                       |
-| `directives`        | 指令列表，支持的类型有：<br>+ AudioPlayer 类型的指令<br>+ Display 类型的指令<br>+ Dialog 类型的指令 | `array`   | 否                       |
-| `card`              | 卡片数据，可以在需要用户登陆时弹出账号连接卡片 | `object` | 否 |
-| `card.type`         | 卡片类型，目前支持：<br> + `LinkAccount`: 账号连接卡片 | 否 |
+| `shouldEndSession`  | 用于通知腾讯叮当是否结束当前会话，该字段不存在时使用默认值`true`：<br>+ `true`表示结束当前会话；<br>+ `false`表示会话继续，一般情况下返回`false`终端会自动打开麦克风收音；       | `boolean` | 否                       |
+| `directives`        | 指令列表，支持的类型有：<br>+ AudioPlayer 类型的指令<br>+ VideoPlayer 类型的指令<br>+ Display 类型的指令<br>+ Dialog 类型的指令<br>+ Connections.SendRequest.Charge 类型的指令 | `array`   | 否                       |
+| `card`              | 卡片数据，可以在需要用户登陆时弹出账号连接卡片，卡片可能被发送到有屏设备或者手机APP上 | `object` | 否 |
+| `card.type`         | 卡片类型，目前支持：<br> + `LinkAccount`: 账号连接卡片，关于账号连接见[文档说明](./account_linking.md) | 否 |
 
 ### OutputSpeech Object 参数说明
 
@@ -462,7 +471,8 @@ Content-Type: application/json;charset=UTF-8
             "url": "string"
           }
         }
-      }
+      },
+      "pay": false
     }
   ]
 }
@@ -473,21 +483,22 @@ Content-Type: application/json;charset=UTF-8
 | 参数                         | 描述                                       | 类型       | 必需   |
 | -------------------------- | ---------------------------------------- | -------- | ---- |
 | `type`                     | 固定值：`AudioPlayer.Play`                   | `string` | 是    |
-| `playlist`                 | 播放列表                                     | `array`  | 是    |
-| `playlist[].stream`        | 音频流                                      | `object` | 是    |
-| `playlist[].stream.url`    | 音频流地址                                    | `string` | 是    |
-| `playlist[].stream.token`  | 唯一标识此音频流的token                           | `string` | 是    |
+| `playlist`                 | 音频列表                                     | `array`  | 是    |
+| `playlist[].stream`        | 音频流信息                                   | `object` | 是    |
+| `playlist[].stream.url`    | 音频流地址                                   | `string` | 否    |
+| `playlist[].stream.token`  | 唯一标识此音频流的token                       | `string` | 是    |
 | `playlist[].info`          | 音频信息                                     | `object` | 否    |
-| `playlist[].info.title`    | 音频的标题                                    | `string` | 是    |
-| `playlist[].info.subtitle` | 音频的副标题，可以是音乐类别或歌手姓名                      | `string` | 否    |
-| `playlist[].info.art`      | 音频的封面图片，见[Image Object](#image-object-参数说明) | `object` | 否    |
+| `playlist[].info.title`    | 音频的标题                                   | `string` | 是    |
+| `playlist[].info.subtitle` | 音频的副标题，建议是音乐类别或歌手姓名          | `string` | 否    |
+| `playlist[].info.art`      | 音频的封面图片信息，见[Image Object](#image-object-参数说明) | `object` | 否    |
+| `playlist[].pay`           | 音频是否需要付费，默认为`false`：`true`表示该音频未购买，需要购买才能后才能收听（`playlist[].stream.url`需要同时设置为空）；`false`表示该音频已购买或者不需要付费购买 | `boolean` | 否    |
 
 
 ### VideoPlayer类型的指令
 该类型的指令用于指示腾讯叮当终端执行视频播控相关的操作。
 
 #### VideoPlayer.Play指令
-播放视频列表。
+播放视频（当前只支持播放单个视频，视频列表播放能力后续支持）。
 
 + 消息样例
 
@@ -722,11 +733,11 @@ Dialog类型的指令主要用于对话流程的控制，比如更新会话过�
 用于向用户询问某个槽位，用户的下一次正确回答将被填充到该槽位中。
 + 消息样例
 
-> **用户**：叮当叮当，帮我打个车
->   *技能返回`Dialog.ElicitSlot`指令，指明`slotToElicit`为`destination`*
-> **叮当**：请问你要去哪里？
-> **用户**：公司
->   *叮当将“公司”提取为`destination`的槽位值*
+> **用户**：叮当叮当，帮我打个车  
+>   *技能返回`Dialog.ElicitSlot`指令，指明`slotToElicit`为`destination`*  
+> **叮当**：请问你要去哪里？  
+> **用户**：公司  
+>   *叮当将“公司”提取为`destination`的槽位值*  
 
 ```json
 {
@@ -752,8 +763,8 @@ Dialog类型的指令主要用于对话流程的控制，比如更新会话过�
 }
 ```
 
-> + `{{SlotName}}`是技能在开放平台定义的槽位名，在上述打车例子中，将替换成`destination`。
-> + **`updatedIntent`中的语义信息将覆盖原有会话的语义信息**，因此如果技能只是更新部分槽位值，应该在请求中`request.intent`的基础上进行更新。
+> + `{{SlotName}}`是技能在开放平台定义的槽位名，在上述打车例子中，将替换成`destination`。  
+> + **`updatedIntent`中的语义信息将覆盖原有会话的语义信息**，因此如果技能只是更新部分槽位值，应该在请求中`request.intent`的基础上进行更新。  
 
 + 参数说明
 
@@ -764,26 +775,30 @@ Dialog类型的指令主要用于对话流程的控制，比如更新会话过�
 | `updatedIntent` | 意图结构体，技能服务可以通过改变结构体的参数值或确认状态，详细信息见[Intent Object](#intent-object-参数说明) | `object` | 否    |
 
 
-### Payment类型的指令
+### Connections.SendRequest类型的指令
+
+#### Charge支付指令
 支付指令主要用于在语音交互中向终端发起支付请求，以便让用户完成支付，更多关于订单创建、订单查询、退款等支付相关的接口请查阅[支付说明文档](./pay.md)。
-#### Payment.Pay指令
 
 + 消息样例
 
 ```json
 {
-  "type": "Payment.Pay",
-  "order": {
-      "name": "string",
-      "description": "string",
-      "userId": "string",
-      "items": [{
-          "itemId": "string",
-          "itemName": "string",
-          "price": 10,
-          "totalFee": 100,
-          "count": 10
-      }]
+  "type": "Connections.SendRequest",
+  "name": "Charge",
+  "payload": {
+      "chargeInfo": {
+          "name": "string",
+          "description": "string",
+          "userId": "string",
+          "items": [{
+              "itemId": "string",
+              "itemName": "string",
+              "price": 10,
+              "totalFee": 100,
+              "count": 10
+          }]
+      }
   }
 }
 ```
@@ -792,17 +807,18 @@ Dialog类型的指令主要用于对话流程的控制，比如更新会话过�
 
 | 参数                         | 描述                                       | 类型       | 必需   |
 | -------------------------- | ---------------------------------------- | -------- | ---- |
-| `type`                     | 固定值：`Payment.Pay`                     | `string` | 是    |
-| `order`                    | 订单信息                                  | `object` | 是    |
-| `order.userId`             | 用户在商户平台的用户ID，用于后续的信息回传   | `string` | 是    |
-| `order.name`               | 商品名称                                  | `string` | 是    |
-| `order.description`         | 商品描述                                  | `string` | 是    |
-| `order.items`              | 商品子类                                   | `array`  | 是    |
-| `order.items[].itemId`     | 商品子类ID                                 | `string`    | 是    |
-| `order.items[].itemName`   | 商品子类名称                               | `string`    | 是    |
-| `order.items[].totalFee`   | 总金额，单位为分                           | `int`    | 是    |
-| `order.items[].price`      | 商品单价，单位为分                         | `int`    | 是    |
-| `order.items[].count`      | 商品数量                                  | `int`    | 是    |
+| `type`                     | 固定值：`Connections.SendRequest`         | `string` | 是    |
+| `name`                     | 固定为`Charge`，表示支付指令               | `string` | 是    |
+| `payload.chargeInfo`                    | 收费信息                                  | `object` | 是    |
+| `payload.chargeInfo.userId`             | 用户在商户平台的用户ID，用于后续的信息回传，若不支持账号连接，需要传该字段   | `string` | 否    |
+| `payload.chargeInfo.name`               | 收费名称                                  | `string` | 是    |
+| `payload.chargeInfo.description`        | 收费描述                                  | `string` | 否    |
+| `payload.chargeInfo.items`              | 商品子类                                  | `array`  | 是    |
+| `payload.chargeInfo.items[].itemId`     | 商品ID                                    | `string` | 是    |
+| `payload.chargeInfo.items[].itemName`   | 商品名称                                  | `string` | 是    |
+| `payload.chargeInfo.items[].totalFee`   | 总金额，单位为分                           | `int`    | 是    |
+| `payload.chargeInfo.items[].price`      | 商品单价，单位为分                         | `int`    | 是    |
+| `payload.chargeInfo.items[].count`      | 商品数量                                  | `int`    | 是    |
 
 
 ## 更新日志

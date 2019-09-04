@@ -1,6 +1,6 @@
 # 腾讯叮当智能家居开放平台接入文档
 
-> 文档更新于2018/09/23，点击查看[更新日志](#更新日志)。
+> 文档更新于2019/03/12，点击查看[更新日志](#更新日志)。
 
 腾讯叮当智能家居开放平台提供了一套与智能硬件厂商的云端进行数据交互的规范，能够让接入腾讯叮当智能家居开放平台的智能设备具备接受语音进行控制的能力。腾讯叮当智能家居技能是通过给智能硬件厂商的云端发送指令的方式，通过厂商的云端进行控制智能硬件的，因此，接入腾讯叮当智能家居开放平台的设备首先需要具备通过云端进行设备管理的能力。交互流程如下图所示：
 ![](./pic/smarthome-skill-interaction-flow.png)
@@ -30,6 +30,12 @@
 		- [DecrementBrightnessPercentageConfirmation](#decrementbrightnesspercentageconfirmation)
 		- [SetBrightnessPercentageRequest](#setbrightnesspercentagerequest)
 		- [SetBrightnessPercentageConfirmation](#setbrightnesspercentageconfirmation)
+		- [IncrementColorTemperatureRequest](#incrementcolortemperaturerequest)
+		- [IncrementColorTemperatureConfirmation](#incrementcolortemperatureconfirmation)
+		- [DecrementColorTemperatureRequest](#decrementcolortemperaturerequest)
+		- [DecrementColorTemperatureConfirmation](#decrementcolortemperatureconfirmation)
+		- [SetColorTemperatureRequest](#setcolortemperaturerequest)
+		- [SetColorTemperatureConfirmation](#setcolortemperatureconfirmation)
 	- [温度调节类消息](#温度调节类消息)
 		- [SetTemperatureRequest](#settemperaturerequest)
 		- [SetTemperatureConfirmation](#settemperatureconfirmation)
@@ -50,6 +56,24 @@
 	- [模式控制类消息](#模式控制类消息)
 		- [SetModeRequest](#setmoderequest)
 		- [SetModeConfirmation](#setmodeconfirmation)
+	- [电视频道控制类消息](#电视频道控制类消息)
+		- [SetTVChannelRequest](#settvchannelrequest)
+		- [SetTVChannelConfirmation](#settvchannelconfirmation)
+		- [IncrementTVChannelRequest](#incrementtvchannelrequest)
+		- [IncrementTVChannelConfirmation](#incrementtvchannelconfirmation)
+		- [DecrementTVChannelRequest](#decrementtvchannelrequest)
+		- [DecrementTVChannelConfirmation](#decrementtvchannelconfirmation)
+		- [RetrunTVChannelRequest](#retruntvchannelrequest)
+		- [ReturnTVChannelConfirmation](#returntvchannelconfirmation)
+	- [音量控制类消息](#音量控制类消息)
+		- [SetVolumeRequest](#setvolumerequest)
+		- [SetVolumeConfirmation](#setvolumeconfirmation)
+		- [IncrementVolumeRequest](#incrementvolumerequest)
+		- [IncrementVolumeConfirmation](#incrementvolumeconfirmation)
+		- [DecrementVolumeRequest](#decrementvolumerequest)
+		- [DecrementVolumeConfirmation](#decrementvolumeconfirmation)
+		- [SetVolumeMuteRequest](#setvolumemuterequest)
+		- [SetVolumeMuteConfirmation](#setvolumemuteconfirmation)
 	- [设备信息查询类消息](#设备信息查询类消息)
 		- [GetTemperatureReadingRequest](#gettemperaturereadingrequest)
 		- [GetTemperatureReadingResponse](#gettemperaturereadingresponse)
@@ -85,6 +109,7 @@
 		- [UnsupportedTargetSettingError](#unsupportedtargetsettingerror)
 		- [UnexpectedInformationReceivedError](#unexpectedinformationreceivederror)
 - [更新日志](#更新日志)
+	- [2019/03/12 更新](#20190312-更新)
 	- [2018/09/23 更新](#20180923-更新)
 
 <!-- /TOC -->
@@ -139,7 +164,7 @@
 | 命名空间                             | 功能说明                      | 指令名称列表                                   |
 | -------------------------------- | ------------------------- | ---------------------------------------- |
 | Dingdang.ConnectedHome.Discovery | 设备的发现和连接                  | • [DiscoverAppliancesRequest](#discoverappliancesrequest)<br />• [DiscoverAppliancesResponse](#discoverappliancesresponse) |
-| Dingdang.ConnectedHome.Control     | 已连接设备的控制，比如打开关闭、调高调低设备属性等 | • [TurnOnRequest](#turnonrequest)<br />• [TurnOnConfirmation](#turnonconfirmation)<br />• [TurnOffRequest](#turnoffrequest)<br />• [TurnOffConfirmation](#turnoffconfirmation)<br />• [SetColorRequest](#setcolorrequest)<br />• [SetColorConfirmation](#setcolorconfirmation)<br />• [IncrementBrightnessPercentageRequest](#incrementbrightnesspercentagerequest)<br />• [IncrementBrightnessPercentageConfirmation](#incrementbrightnesspercentageconfirmation)<br />• [DecrementBrightnessPercentageRequest](#decrementbrightnesspercentagerequest)<br />• [DecrementBrightnessPercentageConfirmation](#decrementbrightnesspercentageconfirmation)<br />• [SetBrightnessPercentageRequest](#setbrightnesspercentagerequest)<br />• [SetBrightnessPercentageConfirmation](#setbrightnesspercentageconfirmation)<br /> • [SetTemperatureRequest](#settemperaturerequest)<br /> • [SetTemperatureConfirmation](#settemperatureconfirmation)<br /> • [IncrementTemperatureRequest](#incrementtemperaturerequest)<br /> • [IncrementTemperatureConfirmation](#incrementtemperatureconfirmation)<br /> • [DecrementTemperatureRequest](#decrementtemperaturerequest)<br /> • [DecrementTemperatureConfirmation](#decrementtemperatureconfirmation)<br /> • [SetFanSpeedRequest](#setfanspeedrequest)<br /> • [SetFanSpeedConfirmation](#setfanspeedconfirmation)<br /> • [IncrementFanSpeedRequest](#incrementfanspeedrequest)<br /> • [IncrementFanSpeedConfirmation](#incrementfanspeedconfirmation)<br /> • [DecrementFanSpeedRequest](#decrementfanspeedrequest)<br /> • [DecrementFanSpeedConfirmation](#decrementfanspeedconfirmation)<br /> • [ChargeRequest](#chargerequest)<br /> • [ChargeConfirmation](#chargeconfirmation)<br /> • [SetModeRequest](#setmoderequest)<br /> • [SetModeConfirmation](#setmodeconfirmation) |
+| Dingdang.ConnectedHome.Control     | 已连接设备的控制，比如打开关闭、调高调低设备属性等 | • [TurnOnRequest](#turnonrequest)<br />• [TurnOnConfirmation](#turnonconfirmation)<br />• [TurnOffRequest](#turnoffrequest)<br />• [TurnOffConfirmation](#turnoffconfirmation)<br />• [SetColorRequest](#setcolorrequest)<br />• [SetColorConfirmation](#setcolorconfirmation)<br />• [IncrementBrightnessPercentageRequest](#incrementbrightnesspercentagerequest)<br />• [IncrementBrightnessPercentageConfirmation](#incrementbrightnesspercentageconfirmation)<br />• [DecrementBrightnessPercentageRequest](#decrementbrightnesspercentagerequest)<br />• [DecrementBrightnessPercentageConfirmation](#decrementbrightnesspercentageconfirmation)<br />• [SetBrightnessPercentageRequest](#setbrightnesspercentagerequest)<br />• [SetBrightnessPercentageConfirmation](#setbrightnesspercentageconfirmation)<br /> • [SetTemperatureRequest](#settemperaturerequest)<br /> • [SetTemperatureConfirmation](#settemperatureconfirmation)<br /> • [IncrementTemperatureRequest](#incrementtemperaturerequest)<br /> • [IncrementTemperatureConfirmation](#incrementtemperatureconfirmation)<br /> • [DecrementTemperatureRequest](#decrementtemperaturerequest)<br /> • [DecrementTemperatureConfirmation](#decrementtemperatureconfirmation)<br /> • [SetFanSpeedRequest](#setfanspeedrequest)<br /> • [SetFanSpeedConfirmation](#setfanspeedconfirmation)<br /> • [IncrementFanSpeedRequest](#incrementfanspeedrequest)<br /> • [IncrementFanSpeedConfirmation](#incrementfanspeedconfirmation)<br /> • [DecrementFanSpeedRequest](#decrementfanspeedrequest)<br /> • [DecrementFanSpeedConfirmation](#decrementfanspeedconfirmation)<br /> • [ChargeRequest](#chargerequest)<br /> • [ChargeConfirmation](#chargeconfirmation)<br /> • [SetModeRequest](#setmoderequest)<br /> • [SetModeConfirmation](#setmodeconfirmation)<br />• [IncrementColorTemperatureRequest](#incrementcolortemperaturerequest)<br />• [IncrementColorTemperatureConfirmation](#incrementcolortemperatureconfirmation)<br />• [DecrementColorTemperatureRequest](#decrementcolortemperaturerequest)<br />• [DecrementColorTemperatureConfirmation](#decrementcolortemperatureconfirmation)<br />• [SetColorTemperatureRequest](#setcolortemperaturerequest)<br />• [SetColorTemperatureConfirmation](#setcolortemperatureconfirmation)<br />• [SetTVChannelRequest](#settvchannelrequest)<br />• [SetTVChannelConfirmation](#settvchannelconfirmation)<br />• [IncrementTVChannelRequest](#incrementtvchannelrequest)<br />• [IncrementTVChannelConfirmation](#incrementtvchannelconfirmation)<br />• [DecrementTVChannelRequest](#decrementtvchannelrequest)<br />• [DecrementTVChannelConfirmation](#decrementtvchannelconfirmation)<br />• [RetrunTVChannelRequest](#retruntvchannelrequest)<br />• [ReturnTVChannelConfirmation](#returntvchannelconfirmation)<br />• [SetVolumeRequest](#setvolumerequest)<br />• [SetVolumeConfirmation](#setvolumeconfirmation)<br />• [IncrementVolumeRequest](#incrementvolumerequest)<br />• [IncrementVolumeConfirmation](#incrementvolumeconfirmation)<br />• [DecrementVolumeRequest](#decrementvolumerequest)<br />• [DecrementVolumeConfirmation](#decrementvolumeconfirmation)<br />• [SetVolumeMuteRequest](#setvolumemuterequest)<br />• [SetVolumeMuteConfirmation](#setvolumemuteconfirmation) |
 | Dingdang.ConnectedHome.Query        | 查询设备的状态或传感器检测的数值 |  • [GetTemperatureReadingRequest](#gettemperaturereadingrequest)<br /> • [GetTemperatureReadingResponse](#gettemperaturereadingresponse)<br /> • [GetAirPM25Request](#getairpm25request)<br /> • [GetAirPM25Response](#getairpm25response)<br /> • [GetHumidityRequest](#gethumidityrequest)<br /> • [GetHumidityResponse](#gethumidityresponse) |
 
 ### 设备发现消息
@@ -835,6 +860,241 @@
 }
 ```
 
+#### IncrementColorTemperatureRequest
+用户请求调高设备的色温值时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | IncrementColorTemperatureRequest           |
+
+
++ Payload
+
+| 参数                      | 参数功能                                     | 参数类型   | 必需   |
+| ----------------------- | ---------------------------------------- | ------ | ---- |
+| `accessToken`           | 用户账号对应的Access Token                      | string | 是    |
+| `appliance`             | 需要调节的设备                                  | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+
+
++ 示例
+用户问法：“叮当叮当，把客厅的灯色温调冷”
+```json
+{
+    "header": {
+        "name": "IncrementColorTemperatureRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        }
+      }
+    }
+}
+```
+
+#### IncrementColorTemperatureConfirmation
+技能调高色温值成功后，返回该消息。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | IncrementColorTemperatureConfirmation      |
+
+
++ Payload
+
+| 参数   | 参数功能 | 参数类型 | 必需   |
+| ---- | ---- | ---- | ---- |
+| `achievedState.colorTemperature.value` | 设置后的色温值，单位为开尔文 | int    | 是    |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "IncrementColorTemperatureConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "achievedState": {
+            "colorTemperature": {
+                "value": 2700
+            }
+        }
+    }
+}
+```
+
+#### DecrementColorTemperatureRequest
+用户请求调低设备的色温值时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | DecrementColorTemperatureRequest           |
+
+
++ Payload
+
+| 参数                      | 参数功能                                     | 参数类型   | 必需   |
+| ----------------------- | ---------------------------------------- | ------ | ---- |
+| `accessToken`           | 用户账号对应的Access Token                      | string | 是    |
+| `appliance`             | 需要调节的设备                                  | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+
+
++ 示例
+用户问法：“叮当叮当，把客厅的灯色温调暖”
+```json
+{
+    "header": {
+        "name": "DecrementColorTemperatureRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        }
+      }
+    }
+}
+```
+
+#### DecrementColorTemperatureConfirmation
+技能调低色温值成功后，返回该消息。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | DecrementColorTemperatureConfirmation      |
+
+
++ Payload
+
+| 参数   | 参数功能 | 参数类型 | 必需   |
+| ---- | ---- | ---- | ---- |
+| `achievedState.colorTemperature.value` | 设置后的色温值，单位为开尔文 | int    | 是    |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "DecrementColorTemperatureConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "achievedState": {
+            "colorTemperature": {
+                "value": 2700
+            }
+        }
+    }
+}
+```
+
+
+#### SetColorTemperatureRequest
+用户请求设置设备的色温值时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | SetColorTemperatureRequest           |
+
+
++ Payload
+
+| 参数                      | 参数功能                                     | 参数类型   | 必需   |
+| ----------------------- | ---------------------------------------- | ------ | ---- |
+| `accessToken`           | 用户账号对应的Access Token                      | string | 是    |
+| `appliance`             | 需要调节的设备                                  | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `colorTemperature.value` | 目标色温，单位为开尔文 | int | 是    |
+
+
++ 示例
+用户问法：“叮当叮当，把客厅的灯色温调到3000”
+```json
+{
+    "header": {
+        "name": "SetColorTemperatureRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        },
+        "colorTemperature": {
+            "value": 3000
+        }
+      }
+    }
+}
+```
+
+#### SetColorTemperatureConfirmation
+技能设置色温值成功后，返回该消息。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | SetColorTemperatureConfirmation      |
+
+
++ Payload
+
+| 参数   | 参数功能 | 参数类型 | 必需   |
+| ---- | ---- | ---- | ---- |
+| `achievedState.colorTemperature.value` | 设置后的色温值，单位为开尔文 | int    | 是    |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "SetColorTemperatureConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "achievedState": {
+            "colorTemperature": {
+                "value": 3000
+            }
+        }
+    }
+}
+```
 
 ### 温度调节类消息
 这类消息用于调节设备的温度。
@@ -1566,6 +1826,688 @@
 }
 ```
 
+### 电视频道控制类消息
+
+#### SetTVChannelRequest
+当用户请求设置为指定的电视频道时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | SetTVChannelRequest      |
+
+
++ Payload
+
+| 参数            | 参数功能                | 参数类型   | 必需   |
+| ------------- | ------------------- | ------ | ---- |
+| `accessToken` | 用户账号对应的Access Token | string | 是    |
+| `appliance`   | 需要调节的设备             | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `targetChannel.value`                | 目标频道，当值为`int`型表示目标的频道排序；当值为`string`类型，表示频道名称   | string/int | 是    |
+
+
++ 示例
+用户问法：“叮当叮当，电视频道调到5”
+```json
+{
+    "header": {
+        "name": "SetTVChannelRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        },
+        "targetChannel": {
+          "value": 5
+        }
+      }
+    }
+}
+```
+
+#### SetTVChannelConfirmation
+设置频道成功后，技能返回该消息给叮当。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | SetTVChannelConfirmation     |
+
+
++ Payload
+
+| 参数                    | 参数功能     | 参数类型   | 必需   |
+| --------------------- | -------- | ------ | ---- |
+| `channel.value` | 当前频道 | string/int | 否  |
+| `previousState.channel.value` | 之前的频道 | string/int | 否  |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "SetTVChannelConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "channel": {
+            "value": 5
+        },
+        "previousState": {
+            "channel": {
+                "value": 8
+            }
+        }
+    }
+}
+```
+
+#### IncrementTVChannelRequest
+当用户请求调高电视频道时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | IncrementTVChannelRequest      |
+
+
++ Payload
+
+| 参数            | 参数功能                | 参数类型   | 必需   |
+| ------------- | ------------------- | ------ | ---- |
+| `accessToken` | 用户账号对应的Access Token | string | 是    |
+| `appliance`   | 需要调节的设备             | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `deltaValue.value`   | 调高的频道值   | int | 是   |
+
+
++ 示例
+用户问法：“叮当叮当，电视调到下一个频道”
+```json
+{
+    "header": {
+        "name": "IncrementTVChannelRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        },
+        "deltaValue": {
+          "value": 1
+        }
+      }
+    }
+}
+```
+
+#### IncrementTVChannelConfirmation
+设置频道成功后，技能返回该消息给叮当。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | IncrementTVChannelConfirmation     |
+
+
++ Payload
+
+| 参数                    | 参数功能     | 参数类型   | 必需   |
+| --------------------- | -------- | ------ | ---- |
+| `channel.value` | 当前频道 | string/int | 否  |
+| `previousState.channel.value` | 之前的频道 | string/int | 否  |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "IncrementTVChannelConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "channel": {
+            "value": 6
+        },
+        "previousState": {
+            "channel": {
+                "value": 5
+            }
+        }
+    }
+}
+```
+
+#### DecrementTVChannelRequest
+当用户请求调低电视频道时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | DecrementTVChannelRequest      |
+
+
++ Payload
+
+| 参数            | 参数功能                | 参数类型   | 必需   |
+| ------------- | ------------------- | ------ | ---- |
+| `accessToken` | 用户账号对应的Access Token | string | 是    |
+| `appliance`   | 需要调节的设备             | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `deltaValue.value`   | 调低的频道值   | int | 是   |
+
+
++ 示例
+用户问法：“叮当叮当，电视调到下一个频道”
+```json
+{
+    "header": {
+        "name": "DecrementTVChannelRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        },
+        "deltaValue": {
+          "value": 1
+        }
+      }
+    }
+}
+```
+
+#### DecrementTVChannelConfirmation
+设置频道成功后，技能返回该消息给叮当。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | DecrementTVChannelConfirmation     |
+
+
++ Payload
+
+| 参数                    | 参数功能     | 参数类型   | 必需   |
+| --------------------- | -------- | ------ | ---- |
+| `channel.value` | 当前频道 | string/int | 否  |
+| `previousState.channel.value` | 之前的频道 | string/int | 否  |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "DecrementTVChannelConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "channel": {
+            "value": 5
+        },
+        "previousState": {
+            "channel": {
+                "value": 6
+            }
+        }
+    }
+}
+```
+
+#### RetrunTVChannelRequest
+当用户返回上一个电视频道时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | RetrunTVChannelRequest      |
+
+
++ Payload
+
+| 参数            | 参数功能                | 参数类型   | 必需   |
+| ------------- | ------------------- | ------ | ---- |
+| `accessToken` | 用户账号对应的Access Token | string | 是    |
+| `appliance`   | 需要调节的设备             | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+
+
++ 示例
+用户问法：“叮当叮当，电视返回上一个频道”
+```json
+{
+    "header": {
+        "name": "RetrunTVChannelRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        }
+      }
+    }
+}
+```
+
+#### ReturnTVChannelConfirmation
+设置频道成功后，技能返回该消息给叮当。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | ReturnTVChannelConfirmation     |
+
+
++ Payload
+
+| 参数                    | 参数功能     | 参数类型   | 必需   |
+| --------------------- | -------- | ------ | ---- |
+| `channel.value` | 当前频道 | string/int | 否  |
+| `previousState.channel.value` | 之前的频道 | string/int | 否  |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "ReturnTVChannelConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "channel": {
+            "value": 5
+        },
+        "previousState": {
+            "channel": {
+                "value": 8
+            }
+        }
+    }
+}
+```
+
+
+### 音量控制类消息
+
+#### SetVolumeRequest
+当用户请求设置为指定的音量时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | SetVolumeRequest      |
+
+
++ Payload
+
+| 参数            | 参数功能                | 参数类型   | 必需   |
+| ------------- | ------------------- | ------ | ---- |
+| `accessToken` | 用户账号对应的Access Token | string | 是    |
+| `appliance`   | 需要调节的设备             | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `targetVolume.value`                | 目标音量，取值范围是[0, 100]  | int | 是    |
+
+
++ 示例
+用户问法：“叮当叮当，电视音量调到15”
+```json
+{
+    "header": {
+        "name": "SetVolumeRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        },
+        "targetVolume": {
+          "value": 15
+        }
+      }
+    }
+}
+```
+
+#### SetVolumeConfirmation
+设置音量成功后，技能返回该消息给叮当。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | SetVolumeConfirmation     |
+
+
++ Payload
+
+| 参数                    | 参数功能     | 参数类型   | 必需   |
+| --------------------- | -------- | ------ | ---- |
+| `volume.value` | 当前音量 | int | 否  |
+| `previousState.volume.value` | 之前音量 | int | 否  |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "SetVolumeConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "volume": {
+            "value": 15
+        },
+        "previousState": {
+            "volume": {
+                "value": 10
+            }
+        }
+    }
+}
+```
+
+#### IncrementVolumeRequest
+当用户请求调大音量时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | IncrementVolumeRequest      |
+
+
++ Payload
+
+| 参数            | 参数功能                | 参数类型   | 必需   |
+| ------------- | ------------------- | ------ | ---- |
+| `accessToken` | 用户账号对应的Access Token | string | 是    |
+| `appliance`   | 需要调节的设备             | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `deltaValue.value`                | 调高的音量值  | int | 是    |
+
+
++ 示例
+用户问法：“叮当叮当，电视音量调高”
+```json
+{
+    "header": {
+        "name": "IncrementVolumeRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        },
+        "deltaValue": {
+          "value": 5
+        }
+      }
+    }
+}
+```
+
+#### IncrementVolumeConfirmation
+设置音量成功后，技能返回该消息给叮当。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | IncrementVolumeConfirmation     |
+
+
++ Payload
+
+| 参数                    | 参数功能     | 参数类型   | 必需   |
+| --------------------- | -------- | ------ | ---- |
+| `volume.value` | 当前音量 | int | 否  |
+| `previousState.volume.value` | 之前音量 | int | 否  |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "IncrementVolumeConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "volume": {
+            "value": 15
+        },
+        "previousState": {
+            "volume": {
+                "value": 10
+            }
+        }
+    }
+}
+```
+
+
+#### DecrementVolumeRequest
+当用户请求调小音量时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                           |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | DecrementVolumeRequest      |
+
+
++ Payload
+
+| 参数            | 参数功能                | 参数类型   | 必需   |
+| ------------- | ------------------- | ------ | ---- |
+| `accessToken` | 用户账号对应的Access Token | string | 是    |
+| `appliance`   | 需要调节的设备             | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `deltaValue.value`                | 调高的音量值  | int | 是    |
+
+
++ 示例
+用户问法：“叮当叮当，电视音量调低”
+```json
+{
+    "header": {
+        "name": "DecrementVolumeRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        },
+        "deltaValue": {
+          "value": 5
+        }
+      }
+    }
+}
+```
+
+#### DecrementVolumeConfirmation
+设置音量成功后，技能返回该消息给叮当。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | DecrementVolumeConfirmation     |
+
+
++ Payload
+
+| 参数                    | 参数功能     | 参数类型   | 必需   |
+| --------------------- | -------- | ------ | ---- |
+| `volume.value` | 当前音量 | int | 否  |
+| `previousState.volume.value` | 之前音量 | int | 否  |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "DecrementVolumeConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "volume": {
+            "value": 15
+        },
+        "previousState": {
+            "volume": {
+                "value": 20
+            }
+        }
+    }
+}
+```
+
+
+#### SetVolumeMuteRequest
+当用户请求静音或取消静音时，叮当将该消息发送给技能。
+
++ Header
+
+| 参数          | 值                           |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | SetVolumeMuteRequest      |
+
+
++ Payload
+
+| 参数            | 参数功能                | 参数类型   | 必需   |
+| ------------- | ------------------- | ------ | ---- |
+| `accessToken` | 用户账号对应的Access Token | string | 是    |
+| `appliance`   | 需要调节的设备             | object | 是    |
+| `appliance.applianceId`                | 设备ID   | string | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `muteState.value`  | 静音状态，`ON`：静音，`OFF`：取消静音  | string | 是    |
+
+
++ 示例
+用户问法：“叮当叮当，电视静音”
+```json
+{
+    "header": {
+        "name": "SetVolumeMuteRequest",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "accessToken": "{{OAuth Token}}",
+        "appliance": {
+          "applianceId": "{{Device ID}}",
+          "additionalApplianceDetails": {}
+        },
+        "muteState": {
+          "value": "ON"
+        }
+      }
+    }
+}
+```
+
+#### SetVolumeMuteConfirmation
+设置静音状态成功后，技能返回该消息给叮当。
+
++ Header
+
+| 参数          | 值                              |
+| ----------- | ------------------------------ |
+| `namespace` | Dingdang.ConnectedHome.Control |
+| `name`      | DecrementVolumeConfirmation     |
+
+
++ Payload
+
+| 参数                    | 参数功能     | 参数类型   | 必需   |
+| --------------------- | -------- | ------ | ---- |
+| `muteState.value` | 当前静音状态 | string | 否  |
+| `previousState.muteState.value` | 之前静音状态 | string | 否  |
+
+
++ 示例
+```json
+{
+    "header": {
+        "name": "DecrementVolumeConfirmation",
+        "namespace": "Dingdang.ConnectedHome.Control",
+        "version": "1"
+    },
+    "payload": {
+        "muteState": {
+            "value": "ON"
+        },
+        "previousState": {
+            "muteState": {
+                "value": "OFF"
+            }
+        }
+    }
+}
+```
 
 ### 设备信息查询类消息
 
@@ -2341,6 +3283,31 @@ Access Token由于非过期的原因失效
 ```
 
 ## 更新日志
+### 2019/03/12 更新
++ 新增控制类指令：
+    - [IncrementColorTemperatureRequest](#incrementcolortemperaturerequest)
+    - [IncrementColorTemperatureConfirmation](#incrementcolortemperatureconfirmation)
+    - [DecrementColorTemperatureRequest](#decrementcolortemperaturerequest)
+    - [DecrementColorTemperatureConfirmation](#decrementcolortemperatureconfirmation)
+    - [SetColorTemperatureRequest](#setcolortemperaturerequest)
+    - [SetColorTemperatureConfirmation](#setcolortemperatureconfirmation)
+    - [SetTVChannelRequest](#settvchannelrequest)
+    - [SetTVChannelConfirmation](#settvchannelconfirmation)
+    - [IncrementTVChannelRequest](#incrementtvchannelrequest)
+    - [IncrementTVChannelConfirmation](#incrementtvchannelconfirmation)
+    - [DecrementTVChannelRequest](#decrementtvchannelrequest)
+    - [DecrementTVChannelConfirmation](#decrementtvchannelconfirmation)
+    - [RetrunTVChannelRequest](#retruntvchannelrequest)
+    - [ReturnTVChannelConfirmation](#returntvchannelconfirmation)
+    - [SetVolumeRequest](#setvolumerequest)
+    - [SetVolumeConfirmation](#setvolumeconfirmation)
+    - [IncrementVolumeRequest](#incrementvolumerequest)
+    - [IncrementVolumeConfirmation](#incrementvolumeconfirmation)
+    - [DecrementVolumeRequest](#decrementvolumerequest)
+    - [DecrementVolumeConfirmation](#decrementvolumeconfirmation)
+    - [SetVolumeMuteRequest](#setvolumemuterequest)
+    - [SetVolumeMuteConfirmation](#setvolumemuteconfirmation)
+
 ### 2018/09/23 更新
 
 + 修改指令IncrementPercentageRequest、IncrementPercentageConfirmation、DecrementPercentageRequest、DecrementPercentageConfirmation、SetPercentageRequest、 SetPercentageConfirmation为意义更加明确的[IncrementBrightnessPercentageRequest](#incrementbrightnesspercentagerequest)、[IncrementBrightnessPercentageConfirmation](#incrementbrightnesspercentageconfirmation)、[DecrementBrightnessPercentageRequest](#decrementbrightnesspercentagerequest)、[DecrementBrightnessPercentageConfirmation](#decrementbrightnesspercentageconfirmation)、[SetBrightnessPercentageRequest](#setbrightnesspercentagerequest)、 [SetBrightnessPercentageConfirmation](#setbrightnesspercentageconfirmation)；
