@@ -427,14 +427,6 @@ Content-Type: application/json;charset=UTF-8
 | `card`              | 卡片数据，可以在需要用户登陆时弹出账号连接卡片，卡片可能被发送到有屏设备或者手机APP上 | `object` | 否 |
 | `card.type`         | 卡片类型，目前支持：<br> + `LinkAccount`: 账号连接卡片，关于账号连接见[文档说明](./account_linking.md) | 否 |
 
-### OutputSpeech Object 参数说明
-
-| 参数                  | 描述                                       | 类型        | 必需                      |
-| ------------------- | ---------------------------------------- | --------- | ----------------------- |
-| `outputSpeech.type` | 可选的取值有：<br>+ `PlainText`：普通文本；<br>+ `SSML`：语音合成标记语言格式； | `string`  | 是                       |
-| `outputSpeech.text` | 回答用户的语音内容                                | `string`  | 是（当`type`为`PlainText`时） |
-| `outputSpeech.ssml` | 语音合成标记语言格式的内容                         | `string`  | 是（当`type`为`SSML`时） |
-
 + SSML示例
 
 ```
