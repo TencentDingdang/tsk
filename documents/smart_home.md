@@ -231,7 +231,7 @@
 | `friendlyDescription`        | 设备描述，最长不超过128个英文字符                       | string | 否    |
 | `isReachable`                | 设备是否在线                                   | bool   | 是    |
 | `actions[]`                  | 设备支持的控制动作，全量控制列表如下 | array  | 是    |
-| `additionalApplianceDetails` | 附加的键值对，腾讯智能家居会将这些信息透传给设备控制服务，数据最长不超过5000字节 | object | 否    |
+| `additionalApplianceDetails` | 附加的键值对，腾讯智能家居会将这些信息透传给设备控制服务，数据最长不超过5000字节 | map[string, string] | 否    |
 
 
 + 设备分类
@@ -399,7 +399,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要打开的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 
 
 + 示例
@@ -467,7 +467,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要打开的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 
 
 + 示例
@@ -536,7 +536,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `color`       | 灯光的颜色，以HSB的颜色空间表示   | object | 是    |
 | `color.hue`        | 颜色色相，变化区间为\[0.00, 360.00\]    | double | 是    |
 | `color.saturation` | 颜色饱和度，变化区间为\[0.0000, 1.0000\] | double | 是    |
@@ -624,7 +624,7 @@
 | `accessToken`           | 用户账号对应的Access Token                      | string | 是    |
 | `appliance`             | 需要调节的设备                                  | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `deltaPercentage.value` | 上浮的百分比，属性的百分比应该在\[0, 100\]间变化，若超过该区间应该返回错误 | double | 是    |
 
 
@@ -709,7 +709,7 @@
 | `accessToken`           | 用户账号对应的Access Token                      | string | 是    |
 | `appliance`             | 需要调节的设备                                  | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `deltaPercentage.value` | 下调的百分比，属性的百分比应该在\[0, 100\]间变化，若超过该区间应该返回错误 | double | 是    |
 
 
@@ -793,7 +793,7 @@
 | `accessToken`           | 用户账号对应的Access Token                      | string | 是    |
 | `appliance`             | 需要调节的设备                                  | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `brightness.value` | 目标百分比，属性的百分比应该在\[0, 100\]间变化，若超过该区间应该返回错误 | double | 是    |
 
 
@@ -878,7 +878,7 @@
 | `accessToken`           | 用户账号对应的Access Token                      | string | 是    |
 | `appliance`             | 需要调节的设备                                  | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 
 
 + 示例
@@ -955,7 +955,7 @@
 | `accessToken`           | 用户账号对应的Access Token                      | string | 是    |
 | `appliance`             | 需要调节的设备                                  | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 
 
 + 示例
@@ -1033,7 +1033,7 @@
 | `accessToken`           | 用户账号对应的Access Token                      | string | 是    |
 | `appliance`             | 需要调节的设备                                  | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `colorTemperature.value` | 目标色温，单位为开尔文 | int | 是    |
 
 
@@ -1117,7 +1117,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `targetTemperature`       | 目标温度   | object | 是    |
 | `targetTemperature.value` | 目标温度值，使用摄氏度表示 | double | 是    |
 
@@ -1207,7 +1207,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `deltaValue.value` | 调高的温度值，单位为摄氏度 | double | 是    |
 
 
@@ -1296,7 +1296,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `deltaValue.value` | 调低的温度值，使用摄氏度表示 | double | 是    |
 
 
@@ -1389,7 +1389,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `fanSpeed.value` | 目标风速值，取值范围为[1, 10]，当用户表达具体的风速值时使用该字段 | int | 否    |
 | `fanSpeed.level` | 目标风速档位，可选值有：`MIN`、`LOW`、`MIDDLE`、`HIGH`、`MAX`、`AUTO`，当用户表达风速档位时使用该字段 | string | 否    |
 
@@ -1479,7 +1479,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `deltaValue.value` | 调高的风速值 | int | 是    |
 
 
@@ -1566,7 +1566,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `deltaValue.value` | 调低的风速值 | int | 是    |
 
 
@@ -1658,7 +1658,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 
 
 + 示例
@@ -1732,7 +1732,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `mode.deviceType`                | 设备类型，可选值见设备模式表   | string | 是    |
 | `mode.value`                | 设备模式，可选值见设备模式表   | string | 是    |
 
@@ -1846,7 +1846,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `targetChannel.value`                | 目标频道，当值为`int`型表示目标的频道排序；当值为`string`类型，表示频道名称   | string/int | 是    |
 
 
@@ -1931,7 +1931,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `deltaValue.value`   | 调高的频道值   | int | 是   |
 
 
@@ -2016,7 +2016,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `deltaValue.value`   | 调低的频道值   | int | 是   |
 
 
@@ -2101,7 +2101,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 
 
 + 示例
@@ -2185,7 +2185,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `targetVolume.value`                | 目标音量，取值范围是[0, 100]  | int | 是    |
 
 
@@ -2270,7 +2270,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `deltaValue.value`                | 调高的音量值  | int | 是    |
 
 
@@ -2356,7 +2356,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `deltaValue.value`                | 调高的音量值  | int | 是    |
 
 
@@ -2442,7 +2442,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 | `muteState.value`  | 静音状态，`ON`：静音，`OFF`：取消静音  | string | 是    |
 
 
@@ -2529,7 +2529,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 
 
 + 示例
@@ -2605,7 +2605,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 
 
 + 示例
@@ -2680,7 +2680,7 @@
 | `accessToken` | 用户账号对应的Access Token | string | 是    |
 | `appliance`   | 需要调节的设备             | object | 是    |
 | `appliance.applianceId`                | 设备ID   | string | 是    |
-| `appliance.additionalApplianceDetails` | 设备附属信息 | map | 是    |
+| `appliance.additionalApplianceDetails` | 设备附属信息 | map[string, string] | 是    |
 
 
 + 示例
