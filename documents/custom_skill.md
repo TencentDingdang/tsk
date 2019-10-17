@@ -35,6 +35,7 @@
 		- [Repeat Datetime value](#repeat-datetime-value)
 		- [SessionEndedRequest 参数说明](#sessionendedrequest-参数说明)
 		- [Connections.Response.Charge 扣款事件参数说明](#connectionsresponsecharge-扣款事件参数说明)
+		- [Display.ElementSelected 参数说明](#displayelementselected-参数说明)
 - [响应数据格式](#响应数据格式)
 	- [HTTP Header](#http-header)
 	- [HTTP Body](#http-body)
@@ -58,6 +59,7 @@
 	- [Connections.SendRequest类型的指令](#connectionssendrequest类型的指令)
 		- [Charge支付指令](#charge支付指令)
 - [更新日志](#更新日志)
+	- [2019/09/19 更新](#20190919-更新)
 	- [2018/11/22 更新](#20181122-更新)
 	- [2018/12/26 更新](#20181226-更新)
 	- [2018/12/29 更新](#20181229-更新)
@@ -802,6 +804,10 @@ Dialog类型的指令主要用于对话流程的控制，比如更新会话过�
 
 
 ## 更新日志
+### 2019/09/19 更新
+
++ 切换支付相关指令；
+
 ### 2018/11/22 更新
 
 + 修正`updateIntent`中`slots[]`结构的错误；
