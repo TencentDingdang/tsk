@@ -110,6 +110,14 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
             "Stop": false,
             "ClearQueue": false
           }
+        },
+        "deviceSerialNum": "string",
+        "location": {
+            "latitude": double,
+            "longitude": double
+        },
+        "agent": {
+            "VN": "1.0.0.0001"
         }
       },
       "application": {
@@ -178,7 +186,14 @@ Authorization: TSK-HMAC-SHA256-BASIC Datetime=20180101T203559Z, Signature=d8612a
 | 参数            | 描述                                       | 类型       |
 | ------------- | ---------------------------------------- | -------- |
 | `application` | 当前技能的信息，用于验证该请求正确指向你的服务，其中：<br>+ ` applicationId`：技能ID，你可以在腾讯叮当技能平台上找到该ID | `object` |
-| `device`      | 当前与技能交互的设备信息：<br>+ `deviceId`：转换的设备ID，唯一标识一台设备；<br>+  `supportedInterfaces`：当前设备支持的接口类型，` AudioPlayer {}`表示该设备支持` AudioPlayer`接口 | `object` |
+| `device`      | 当前与技能交互的设备信息 | `object` |
+| `device.deviceId`      | 转换的设备ID，唯一标识一台设备； | `string` |
+| `device.deviceSerialNum` | 设备的序列号，**设备厂商自建的技能才能收到这个字段**； | `string` |
+| `device.supportedInterfaces`      | 当前设备支持的接口类型，` AudioPlayer {}`表示该设备支持` AudioPlayer`接口 | `object` |
+| `device.location`      | 当前设备的位置信息，依赖于终端的上传，**设备厂商自建的技能，申请通过后才能收到该字段**。 | `object` |
+| `device.location.longitude`   | 设备上传的经度。 | `double` |
+| `device.location.latitude`    | 设备上传的纬度。 | `double` |
+| `device.agent`        | 当前设备的agent信息，取自终端上传的QUA，**设备厂商自建的技能才能收到这个字段**。<br>+ `VN`：终端版本信息； | `object` |
 | `user`        | 当前与技能交互的用户信息：<br>+ `userId`：转换的用户ID，唯一标识一个叮当用户，**用户重新关注技能后可能产生新的用户ID**；<br>+ `accessToken`：用户在第三方系统的账号标识，仅在账号连接成功后才会提供，查阅[账号连接](./account_linking.md)了解更多相关信息。 | `object` |
 
 ### Request Object 参数说明
