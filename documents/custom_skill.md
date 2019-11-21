@@ -355,20 +355,15 @@ LaunchRequest在用户初次进入技能并且没有明确意图的时候发送�
 
 注意：对该事件的响应内容不能包含`Dialog`类型的指令，且`shouldEndSession`会置为`true`。
 
-#### Display.ElementSelected 参数说明
-这类请求目前只在即将播放付费音频时才会发送到技能（付费音频可在[AudioPlayer.Play](#audioplayerplay指令)指令中设置音频为付费），触发该事件的方式有：
-1. 在播放完前一个音频时，自动切换到当前音频时平台发现当前音频需要付费，平台**模拟**触发该事件；
-2. 用户通过点击上一首/下一首按钮时，切换到当前音频时平台发现当前音频需要付费，平台**模拟**触发该事件；
-3. 用户通过点击播放列表中的音频，平台发现音频需要付费，平台触发事件；
-4. 用户通过语音选择当前音频时，平台发现音频需要付费，平台触发事件；
+#### Display.ElementSelected 事件参数说明
+在用户点击了宫格列表中的元素时，云小微会向技能发送`Display.ElementSelected`事件，技能可进行相应的处理并给出响应。
 
 | 参数              | 描述                                       | 类型     |
 | --------------- | ------------------------------------------- | -------- |
 | `type`          | 固定为`Display.ElementSelected`              | `string` |
 | `requestId`     | 当前请求的ID，用于唯一标识一次请求             | `string` |
-| `timestamp`     | 用户请求时间戳，ISO 8601格式的UTC+0时间        | `string` |
-| `token`         | 当前被选中的Item的`token`，在音频被选中的场景为`playlist.stream.token`字段  | `string` |
-
+| `timestamp`     | 用户请求时间戳，ISO 8601格式的UTC+0时间       | `string` |
+| `token`         | 当前被选中的Item的`token`                    | `string` |
 
 ## 响应数据格式
 
