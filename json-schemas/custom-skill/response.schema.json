@@ -1,0 +1,393 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "common": {
+            "url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "http[s]?://.+",
+                "description": "一个以http/https开头的URL"
+            },
+            "image": {
+                "type": "object",
+                "properties": {
+                    "source": {
+                        "type": "object",
+                        "properties": {
+                            "url": {
+                                "$ref": "#/definitions/common/url"
+                            }
+                        },
+                        "required": [
+                            "url"
+                        ]
+                    }
+                },
+                "required": [
+                    "source"
+                ]
+            }
+        },
+        "AudioPlayer": {
+            "Play": {
+                "playlist_Item": {
+                    "stream": {
+                        "type": "object",
+                        "properties": {
+                            "url": {
+                                "$ref": "#/definitions/common/url"
+                            },
+                            "token": {
+                                "type": "string",
+                                "minLength": 1
+                            }
+                        },
+                        "required": [
+                            "url",
+                            "token"
+                        ]
+                    },
+                    "info": {
+                        "type": "object",
+                        "properties": {
+                            "title": {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            "subtitle": {
+                                "type": "string"
+                            },
+                            "art": {
+                                "$ref": "#/definitions/common/image"
+                            }
+                        },
+                        "required": [
+                            "title"
+                        ]
+                    },
+                    "properties": {
+                        "stream": {
+                            "$ref": "#/definitions/AudioPlayer/Play/playlist_Item/stream"
+                        },
+                        "info": {
+                            "$ref": "#/definitions/AudioPlayer/Play/playlist_Item/info"
+                        }
+                    },
+                    "required": [
+                        "stream"
+                    ]
+                },
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "const": "AudioPlayer.Play"
+                    },
+                    "playlist": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/AudioPlayer/Play/playlist_Item"
+                        },
+                        "minItems": 1,
+                        "uniqueItems": true
+                    }
+                }
+            },
+            "required": [
+                "type",
+                "playlist"
+            ]
+        },
+        "VideoPlayer": {
+            "Play": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "const": "VideoPlayer.Play"
+                    },
+                    "playlist": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "stream": {
+                                    "$ref": "#/definitions/AudioPlayer/Play/playlist_Item/stream"
+                                }
+                            },
+                            "required": [
+                                "stream"
+                            ]
+                        },
+                        "minItems": 1,
+                        "uniqueItems": true
+                    }
+                }
+            },
+            "required": [
+                "type",
+                "playlist"
+            ]
+        },
+        "Display": {
+            "RenderTemplate": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "const": "Display.RenderTemplate"
+                    },
+                    "token": {
+                        "type": "string",
+                        "minLength": 1
+                    }
+                },
+                "required": [
+                    "type",
+                    "token"
+                ]
+            }
+        },
+        "Dialog": {
+            "Intent": {
+                "ConfirmationStatus": {
+                    "enum": [
+                        "NONE",
+                        "CONFIRMED",
+                        "DENIED"
+                    ]
+                },
+                "Slot": {
+                    "TextSlot": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "const": "text"
+                            },
+                            "value": {"type": "string"},
+                            "origin": {"type": "string"}
+                        },
+                        "required": ["type", "value", "origin"]
+                    },
+                    "UnitSlot": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "enum": ["unit"]
+                            },
+                            "amount": {"type": "string"},
+                            "unit": {"type": "string"},
+                            "origin": {"type": "string"}
+                        },
+                        "required": ["type", "amount", "unit", "origin"]
+                    },
+                    "AddressSlot": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "const": "address"
+                            },
+                            "country": {"type": "string"},
+                            "province": {"type": "string"},
+                            "city": {"type": "string"},
+                            "district": {"type": "string"},
+                            "town": {"type": "string"},
+                            "village": {"type": "string"},
+                            "title": {"type": "string"},
+                            "origin": {"type": "string"}
+                        },
+                        "required": ["type", "origin"]
+                    },
+                    "DatetimeSlot": {
+                        "DateTime": {
+                            "type": "object",
+                            "properties":{
+                                "date": {"type": "string", "format": "date"},
+                                "time": {"type": "string", "format": "time"}
+                            }
+                        },
+                        "Normal": {
+                            "type": "object",
+                            "properties": {
+                                "type": {"const": "NORMAL"},
+                                "datetime": {"$ref": "#/definitions/Dialog/Intent/Slot/DatetimeSlot/DateTime"}
+                            },
+                            "required": ["type", "datetime"]
+                        },
+                        "Interval": {
+                            "type": "object",
+                            "properties": {
+                                "type": {"const": "INTERVAL"},
+                                "start": {"$ref": "#/definitions/Dialog/Intent/Slot/DatetimeSlot/DateTime"},
+                                "end": {"$ref": "#/definitions/Dialog/Intent/Slot/DatetimeSlot/DateTime"}
+                            },
+                            "required": ["type", "start", "end"]
+                        },
+                        "Repeat": {
+                            "type": "object",
+                            "properties": {
+                                "type": {"const": "REPEAT"},
+                                "amount": {"type": "string"},
+                                "repeatType": {"enum": ["YEAR", "MONTH", "WEEK", "DAY", "HOUR", "MINUTE", "WORKDAY", "WEEKEND"]},
+                                "start": {"$ref": "#/definitions/Dialog/Intent/Slot/DatetimeSlot/DateTime"},
+                                "end": {"$ref": "#/definitions/Dialog/Intent/Slot/DatetimeSlot/DateTime"}
+                            },
+                            "required": ["type", "start", "end"]
+                        },
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "const": "datetime"
+                            },
+                            "value": {
+                                "anyOf": [
+                                    {"$ref": "#/definitions/Dialog/Intent/Slot/DatetimeSlot/Normal"},
+                                    {"$ref": "#/definitions/Dialog/Intent/Slot/DatetimeSlot/Interval"},
+                                    {"$ref": "#/definitions/Dialog/Intent/Slot/DatetimeSlot/Repeat"}
+                                ]
+                            },
+                            "origin": {"type": "string"}
+                        },
+                        "required": ["type", "value", "origin"]
+                    },
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "confirmationStatus": {
+                            "$ref": "#/definitions/Dialog/Intent/ConfirmationStatus"
+                        },
+                        "values": {
+                            "type": "array",
+                            "items": {
+                                "anyOf":[
+                                    {"$ref": "#/definitions/Dialog/Intent/Slot/TextSlot"},
+                                    {"$ref": "#/definitions/Dialog/Intent/Slot/UnitSlot"},
+                                    {"$ref": "#/definitions/Dialog/Intent/Slot/AddressSlot"},
+                                    {"$ref": "#/definitions/Dialog/Intent/Slot/DatetimeSlot"}
+                                ]
+                            }
+                        }
+                    },
+                    "required": [
+                        "name",
+                        "confirmationStatus"
+                    ]
+                },
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "confirmationStatus": {
+                        "$ref": "#/definitions/Dialog/Intent/ConfirmationStatus"
+                    },
+                    "slots": {
+                        "type": "object",
+                        "patternProperties": {
+                            "^[a-zA-Z0-9]*$": {"$ref": "#/definitions/Dialog/Intent/Slot"}
+                        },
+                        "additionalProperties":false
+                    }
+                },
+                "required": [
+                    "name",
+                    "confirmationStatus",
+                    "slots"
+                ]
+            },
+            "ElicitSlot": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "const": "Dialog.ElicitSlot"
+                    },
+                    "slotToElicit": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "updatedIntent": {
+                        "$ref": "#/definitions/Dialog/Intent"
+                    }
+                },
+                "required": [
+                    "type",
+                    "slotToElicit"
+                ]
+            }
+        }
+    },
+    "type": "object",
+    "properties": {
+        "version": {
+            "enum": [
+                "1.0"
+            ]
+        },
+        "response": {
+            "properties": {
+                "outputSpeech": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "enum": [
+                                "PlainText"
+                            ]
+                        },
+                        "text": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "text"
+                    ]
+                },
+                "directives": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/definitions/AudioPlayer/Play"
+                            },
+                            {
+                                "$ref": "#/definitions/Display/RenderTemplate"
+                            },
+                            {
+                                "$ref": "#/definitions/Dialog/ElicitSlot"
+                            }
+                        ]
+                    }
+                },
+                "shouldEndSession": {
+                    "type": "boolean"
+                },
+                "card": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "enum": [
+                                "LinkAccount"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ]
+                }
+            },
+            "required": [
+                "outputSpeech",
+                "shouldEndSession"
+            ]
+        },
+        "feedbackAttributes": {
+            "type": "object"
+        }
+    },
+    "additionalProperties":false,
+    "required": [
+        "version",
+        "response"
+    ]
+}
