@@ -2,9 +2,9 @@
 
 ### AIPM4
 
-+ 语音识别参数错误
-+ 描述：代理层调用语音识别服务返回参数错误，代理返回-4
-+ 处理对策：请检查sdk设置语音识别参数是否合理，sdk请参考https://dingdang.qq.com/doc/page/219
++ 参数错误
++ 描述：appkey信息非法或服务返回参数错误，代理返回-4
++ 处理对策：Appkey注册请到https://dingdang.qq.com/tvs申请设备接入。请检查sdk设置参数是否合理，sdk请参考https://dingdang.qq.com/doc/page/219。
 
 ### AIPM7
 
@@ -222,4 +222,34 @@
 + 设备验证失败
 + 描述：设备验证失败，音乐技能返回102
 + 处理对策：设备没有注册，请检查账号授权接入流程是否合理，可参考：https://dingdang.qq.com/doc/page/296
-	
+
+
+### asrm4
+
++ 设备验证失败
++ 描述：设备验证失败，音乐技能返回102
++ 处理对策：设备没有注册，请检查账号授权接入流程是否合理，可参考：https://dingdang.qq.com/doc/page/296
+
+### asrm4
+
++ Appkey非法
++ 描述：Appkey没有注册或参数设置校验不通过，asr返回-4
++ 处理对策：Appkey没有注册，请到https://dingdang.qq.com/tvs申请设备接入
+
+### ttsm4
+
++ 主动拒绝服务
++ 描述：主动拒绝服务，tts返回-4
++ 处理对策：系统出现过载情况，主动拒绝服务，短时间出现必现问题可反馈给腾讯云小微做进一步问题定位
+
+### tts2
+
++ 参数错误
++ 描述：语音合成参数错误，tts返回2
++ 处理对策：请检查sdk设置语音合成参数是否合理，sdk请参考https://dingdang.qq.com/doc/page/219
+
+### aip1102
+
++ 设备验证失败
++ 描述：设备验证失败，代理返回1102
++ 处理对策：设备没有注册，请检查账号授权接入流程是否合理，可参考：https://dingdang.qq.com/doc/page/296
