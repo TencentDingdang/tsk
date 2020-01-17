@@ -315,6 +315,24 @@
                     "slotToElicit"
                 ]
             }
+        },
+        "URI": {
+            "Open": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "const": "URI.Open"
+                    },
+                    "url": {
+                        "type": "string",
+                        "minLength": 1
+                    }
+                },
+                "required": [
+                    "type",
+                    "url"
+                ]
+            }
         }
     },
     "type": "object",
@@ -355,6 +373,9 @@
                             },
                             {
                                 "$ref": "#/definitions/Dialog/ElicitSlot"
+                            },
+                            {
+                                "$ref": "#/definitions/URI/Open"
                             }
                         ]
                     }
