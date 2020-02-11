@@ -53,3 +53,78 @@
 | -203 | 传入的authRespInfoJson不为空，但解析json失败 | sdk | sdk | 检测代码逻辑是否正确 | 
 | -204 | authRespInfoJson中的sessionId已失效 | sdk | sdk | 重新发起授权流程 | 
 
+# TVS SDK错误码(Android) #
+
+注：此错误码列表声学前端(RESULT_APL_XXX)部分只适用于TVS SDK提供的声学前端使用.接入第三方声学前端，请参考第三方定义的错误码。
+| 返回码 | 名字                         | 备注                                                 |
+| ------ | ---------------------------- | ---------------------------------------------------- |
+| 0      | RESULT_OK                    | 正常返回    |
+## 1. SDK初始化 ##
+
+| 错误码 | 名字                         | 备注                                                 |
+| ------ | ---------------------------- | ---------------------------------------------------- |                                      |
+| -10000 | RESULT_SDK_INIT_ERROR        | SDK初始化失败-内部错误                               |
+| -10001 | RESULT_SDK_INIT_CONTEXT_NULL | SDK初始化失败-application的Context为空               |
+| -10002 | RESULT_SDK_INIT_ALREADY      | SDK初始化失败-重复初始化                             |
+| -10003 | RESULT_SDK_INIT_PARAM_EMPTY  | SDK初始化失败-必传参数为空(appkey、accessToken、dsn) |
+
+
+## 2. 账号 ##
+| 错误码 | 名字                              | 备注                                                         |
+| ------ | --------------------------------- | ------------------------------------------------------------ |
+| -200   | RESULT_AUTH_NOT_INITED            | 账号模块没有初始化                                           |
+| -201   | RESULT_AUTH_HAD_CLIENTID_ALREADY  | 设备已经存在clientId的情况下，再次setClientId，这时候需要先调用clear清除账号 |
+| -202   | RESULT_AUTH_SET_CLIENTID_EMPTY    | 传入的clientId为空                                           |
+| -203   | RESULT_AUTH_PARSE_AUTHCODE_FAILED | 解析传入的authCode json报错                                  |
+| -204   | RESULT_AUTH_SESSIONID_INVALID     | sessionId对应的设备端授权信息已丢失，本次授权无效            |
+## 3. 会话 ##
+
+| 错误码 | 名字                                    | 备注                                                   |
+| ------ | --------------------------------------- | ------------------------------------------------------ |
+| -30000 | RESULT_DIALOG_INIT_FAIL                 | DialogManager初始化失败-识别模块初始化失败             |
+| -31000 | RESULT_APL_INIT_NULL                    | DialogManager初始化失败-语音预处理模块初始化失败       |
+| -31001 | RESULT_APL_NOT_INIT                     | DialogManager初始化失败-语音预处理模块未初始化         |
+| -31002 | RESULT_APL_NO_VOICE_ENGINE              | DialogManager初始化失败-离线语音引擎异常               |
+| -31003 | RESULT_APL_NO_SEMANTIC_ENGINE           | DialogManager初始化失败-离线语义引擎异常               |
+| -31010 | RESULT_APL_RECO_START_ERR               | 语音预处理开始启动识别异常                             |
+| -31011 | RESULT_APL_RECO_ENGINE_ERR              | 识别过程中，引擎出现异常                               |
+| -31100 | RESULT_APL_SEMANTIC_PARSE_JSON_ERR      | 解析json异常错误                                       |
+| -31101 | RESULT_APL_SEMANTIC_QUERY_NULL_ERR      | 请求语义的query为null                                  |
+| -31102 | RESULT_APL_SEMANTIC_REQUEST_ERR         | 请求语义错误                                           |
+| -31201 | RESULT_APL_WAKEUP_MODEL_ERR             | 模型异常，放置的模型版本号不对或者文件不全或者没有模型 |
+| -31202 | RESULT_APL_WAKEUP_ENGINE_ERR            | 唤醒解码器引擎错误，创建解码器失败                     |
+| -31203 | RESULT_APL_WAKEUP_PARSE_RESULT_ERR      | 解析唤醒初始化结果错误                                 |
+| -31204 | RESULT_APL_WAKEUP_NOT_INIT_ERR          | 唤醒未初始化，调用start或者stop返回                    |
+| -31900 | RESULT_APL_ERR_IN_DIALOG                | 会话过程中预处理模块报错                               |
+| -32000 | RESULT_OFFLINE_RECO_FAILED              | 离线识别-内部错误                                      |
+| -32001 | RESULT_OFFLINE_RECO_NOT_INIT            | 离线识别-未初始化                                      |
+| -32002 | RESULT_OFFLINE_RECO_INVALID_PARAM       | 离线识别-传入错误参数，可能传入空的模型                |
+| -32003 | RESULT_OFFLINE_RECO_MODEL_NOT_FOUND     | 离线识别-模型文件未找到                                |
+| -32099 | RESULT_OFFLINE_RECO_UNKNOW_ERR          | 离线识别-未知问题，可能是引擎出现问题                  |
+| -32200 | RESULT_OFFLINE_RECO_LIB_NOT_EXIST       | 离线库不存在                                           |
+| -32201 | RESULT_OFFLINE_RECO_NOT_OPEN_COMMANDKWD | 没有打开自定义唤醒                                     |
+
+## 4.通用错误码 ##
+
+| 错误码 | 名字                           | 备注                         |
+| ------ | ------------------------------ | ---------------------------- |
+| -40000 | RESULT_START_RECO_FAILED       | 会话失败(内部错误)           |
+| -40001 | RESULT_SEND_REQUEST_FAILED     | 终端发送请求失败             |
+| -40002 | RESULT_SERVER_ERROR            | 服务器返回的错误码不正常     |
+| -40003 | RESULT_AUTHORIZATION_FAILED    | 终端的授权信息为空           |
+| -40004 | RESULT_SERVER_DATA_PARSE_ERROR | 服务器返回的json数据解析失败 |
+| -40005 | RESULT_SERVER_CLOSED           | 服务器连接关闭               |
+| -40006 | RESULT_CANCELED                | 被其他同类型请求取消         |
+| -40007 | RESULT_INVALID_RESULT          | 返回无效结果                 |
+| -40008 | RESULT_SERVER_NO_RESULT        | 服务器返回204（无数据返回）  |
+| -40009 | RESULT_NETWORK_ERROR           | 网络请求回调错误             |
+| -40100 | RESULT_ASR_SILIENT_TIMEOUT     | 终端的静音超时               |
+
+
+## 5. 其他 ##
+
+| 错误码 | 名字                            | 备注                      |
+| ------ | ------------------------------- | ------------------------- |
+| -51001 | RESULT_UNIACCESS_INVALID_RESULT | UniAccess返回无效结果     |
+| -51002 | RESULT_UNIACCESS_NETWORK_ERROR  | UniAccess网络请求回调错误 |
+
